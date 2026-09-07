@@ -1,111 +1,89 @@
 /* =====================================================
-   TRENDORA JAVASCRIPT
+   TRENDORA V2
+   Main JavaScript
 ===================================================== */
 
 
-/* =====================================================
-   PRELOADER
-===================================================== */
+/* ================= LOADER ================= */
 
 window.addEventListener("load", () => {
 
+    const loader =
+        document.getElementById("loaderScreen");
+
     setTimeout(() => {
 
-        const loader =
-            document.getElementById("preloader");
+        loader.style.opacity = "0";
 
-        if (loader) {
-            loader.classList.add("hide");
-        }
+        setTimeout(() => {
+            loader.style.display = "none";
+        }, 500);
 
-    }, 1000);
+    }, 700);
 
 });
 
 
-/* =====================================================
-   MOBILE MENU
-===================================================== */
+/* ================= MOBILE MENU ================= */
 
-function toggleMenu() {
+const menuButton =
+    document.getElementById("menuButton");
 
-    const nav =
-        document.getElementById("navMenu");
+const mainNav =
+    document.getElementById("mainNav");
 
-    nav.classList.toggle("active");
+menuButton.addEventListener("click", () => {
 
-}
+    mainNav.classList.toggle("show");
+
+});
 
 
-/* Close mobile menu after clicking */
-
-document.querySelectorAll("#navMenu a")
+document.querySelectorAll("#mainNav a")
 .forEach(link => {
 
     link.addEventListener("click", () => {
 
-        document
-            .getElementById("navMenu")
-            .classList.remove("active");
+        mainNav.classList.remove("show");
 
     });
 
 });
 
 
-/* =====================================================
-   SMOOTH SCROLL
-===================================================== */
+/* ================= YEAR ================= */
 
-function scrollToSection(id) {
-
-    const element =
-        document.getElementById(id);
-
-    if (element) {
-
-        element.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-
-    }
-
-}
+document.getElementById("year")
+.textContent =
+new Date().getFullYear();
 
 
-/* =====================================================
-   MESSAGE
-===================================================== */
+/* ================= TOAST ================= */
 
-let messageTimer;
+function showToast(message, icon = "✓") {
 
-function showMessage(text) {
+    const toast =
+        document.getElementById("toast");
 
-    const box =
-        document.getElementById("messageBox");
+    const text =
+        document.getElementById("toastText");
 
-    clearTimeout(messageTimer);
+    const toastIcon =
+        document.getElementById("toastIcon");
 
-    box.textContent = text;
+    toastIcon.textContent = icon;
 
-    box.classList.add("show");
+    text.textContent = message;
 
-    messageTimer = setTimeout(() => {
+    toast.classList.add("show");
 
-        box.classList.remove("show");
+    setTimeout(() => {
 
-    }, 2800);
+        toast.classList.remove("show");
+
+    }, 3000);
 
 }
-
-
-/* =====================================================
-   YEAR
-===================================================== */
-
-document.getElementById("year").textContent =
-    new Date().getFullYear();
 
 
 /* =====================================================
@@ -113,478 +91,1030 @@ document.getElementById("year").textContent =
 ===================================================== */
 
 /*
-   DEMO VERSION
+   DEMO ONLY
 
-   localStorage counts visits on the current
-   browser/device.
+   This counter is stored in the visitor's browser.
 
-   It is NOT a global website counter.
+   It is NOT a global website visitor counter.
 
-   For a real global counter, connect a database
-   such as Firebase or Supabase.
+   A real global counter requires a database.
 */
 
 let visitors =
     Number(
-        localStorage.getItem("trendoraVisitors")
+        localStorage.getItem(
+            "trendoraVisitorCount"
+        )
     ) || 0;
 
 visitors++;
 
 localStorage.setItem(
-    "trendoraVisitors",
+    "trendoraVisitorCount",
     visitors
 );
 
+document.getElementById("visitorCount")
+.textContent =
+formatNumber(visitors);
 
-function updateVisitorDisplays() {
 
-    document.getElementById("visitorCount")
-        .textContent = formatNumber(visitors);
-
-    document.getElementById("heroVisitors")
-        .textContent = formatNumber(visitors);
-
-}
-
+/* ================= NUMBER FORMAT ================= */
 
 function formatNumber(number) {
 
     if (number >= 1000000) {
-        return (number / 1000000).toFixed(1) + "M";
+
+        return (
+            (number / 1000000)
+            .toFixed(1) + "M"
+        );
+
     }
 
     if (number >= 1000) {
-        return (number / 1000).toFixed(1) + "K";
+
+        return (
+            (number / 1000)
+            .toFixed(1) + "K"
+        );
+
     }
 
     return number;
+
 }
-
-
-updateVisitorDisplays();
 
 
 /* =====================================================
-   LIVE VIEWERS
+   LIVE USERS
 ===================================================== */
 
-/*
-   This is a visual demo.
-
-   It does not represent the actual number
-   of people on the website.
-
-   A real live viewer count requires a server.
-*/
-
-let onlineUsers =
-    Math.floor(Math.random() * 8) + 3;
+let liveUsers =
+    Math.floor(
+        Math.random() * 80
+    ) + 100;
 
 
-function updateOnlineDisplays() {
+const liveCount =
+    document.getElementById("liveCount");
 
-    document.getElementById("liveCount")
-        .textContent = onlineUsers;
-
-    document.getElementById("headerOnline")
-        .textContent = onlineUsers;
-
-    document.getElementById("heroOnline")
-        .textContent = onlineUsers + " watching";
-
-    document.getElementById("heroOnline")
-        .textContent = onlineUsers + " watching";
-
-}
+const heroLiveUsers =
+    document.getElementById(
+        "heroLiveUsers"
+    );
 
 
-updateOnlineDisplays();
-
-
-setInterval(() => {
+function updateLiveUsers() {
 
     const change =
-        Math.floor(Math.random() * 3) - 1;
+        Math.floor(
+            Math.random() * 9
+        ) - 4;
 
-    onlineUsers += change;
+    liveUsers += change;
 
-    if (onlineUsers < 1) {
-        onlineUsers = 1;
+    if (liveUsers < 70) {
+        liveUsers = 70;
     }
 
-    if (onlineUsers > 99) {
-        onlineUsers = 99;
-    }
+    liveCount.textContent =
+        liveUsers;
 
-    updateOnlineDisplays();
+    heroLiveUsers.textContent =
+        liveUsers;
 
-}, 5000);
+}
+
+
+updateLiveUsers();
+
+setInterval(
+    updateLiveUsers,
+    5000
+);
 
 
 /* =====================================================
-   MUSIC DATABASE
+   DATABASE-LIKE LOCAL STORAGE
 ===================================================== */
 
-let musicLibrary =
+let musicFiles =
     JSON.parse(
-        localStorage.getItem("trendoraMusic")
+        localStorage.getItem(
+            "trendoraMusicFiles"
+        )
+    ) || [];
+
+
+let movieFiles =
+    JSON.parse(
+        localStorage.getItem(
+            "trendoraMovieFiles"
+        )
     ) || [];
 
 
 /* =====================================================
-   DISPLAY MUSIC
+   HTML SECURITY
 ===================================================== */
 
-function displayMusic(list = musicLibrary) {
+function escapeHTML(value) {
 
-    const musicList =
-        document.getElementById("musicList");
+    const element =
+        document.createElement("div");
 
-    musicList.innerHTML = "";
+    element.textContent =
+        value;
+
+    return element.innerHTML;
+
+}
+
+
+/* =====================================================
+   MUSIC RENDER
+===================================================== */
+
+function renderMusic(list = musicFiles) {
+
+    const container =
+        document.getElementById(
+            "musicList"
+        );
+
+    container.innerHTML = "";
 
 
     if (list.length === 0) {
 
-        musicList.innerHTML = `
-
-            <div class="music-item">
-
-                <div class="music-icon">
-                    🎵
-                </div>
-
-                <div class="music-details">
-
-                    <h3>
-                        No music available yet
-                    </h3>
-
-                    <p>
-                        The Trendora creator can upload
-                        music from the admin panel below.
-                    </p>
-
-                </div>
-
+        container.innerHTML = `
+            <div class="emptyMessage">
+                🎵 No music uploaded yet.
+                <br><br>
+                Be the first person to upload!
             </div>
-
         `;
-
-        updateSongCount();
 
         return;
     }
 
 
-    list.forEach(song => {
+    list.forEach((music) => {
 
-        const item =
-            document.createElement("div");
+        const card =
+            document.createElement("article");
 
-        item.className = "music-item";
-
-
-        const icon =
-            document.createElement("div");
-
-        icon.className = "music-icon";
-
-        icon.textContent = "🎵";
+        card.className =
+            "musicCard";
 
 
-        const details =
-            document.createElement("div");
+        card.innerHTML = `
 
-        details.className = "music-details";
+            <div class="musicIcon">
+                🎵
+            </div>
 
+            <div class="musicDetails">
 
-        const title =
-            document.createElement("h3");
+                <h3>
+                    ${escapeHTML(music.title)}
+                </h3>
 
-        title.textContent = song.title;
+                <p>
+                    Uploaded by
+                    ${escapeHTML(music.uploader)}
+                </p>
 
+            </div>
 
-        const artist =
-            document.createElement("p");
-
-        artist.textContent =
-            song.artist;
-
-
-        details.appendChild(title);
-        details.appendChild(artist);
-
-
-        const audio =
-            document.createElement("audio");
-
-        audio.controls = true;
-
-        audio.src = song.url;
+        `;
 
 
-        item.appendChild(icon);
-        item.appendChild(details);
-        item.appendChild(audio);
+        if (music.file) {
+
+            const audio =
+                document.createElement(
+                    "audio"
+                );
+
+            audio.controls = true;
+
+            audio.preload =
+                "metadata";
+
+            const source =
+                document.createElement(
+                    "source"
+                );
+
+            source.src =
+                music.file;
+
+            source.type =
+                music.fileType ||
+                "audio/mpeg";
+
+            audio.appendChild(
+                source
+            );
+
+            card.appendChild(
+                audio
+            );
+
+        }
 
 
-        musicList.appendChild(item);
+        container.appendChild(
+            card
+        );
 
     });
-
-
-    updateSongCount();
 
 }
 
 
 /* =====================================================
-   SONG COUNT
+   MOVIE RENDER
 ===================================================== */
 
-function updateSongCount() {
+function renderMovies(list = movieFiles) {
 
-    const count =
-        musicLibrary.length;
+    const container =
+        document.getElementById(
+            "movieList"
+        );
 
-    document.getElementById("songCount")
-        .textContent = count;
+    container.innerHTML = "";
 
-    document.getElementById("heroSongs")
-        .textContent = count;
+
+    if (list.length === 0) {
+
+        container.innerHTML = `
+            <div class="emptyMessage">
+                🎬 No videos uploaded yet.
+                <br><br>
+                Upload the first video!
+            </div>
+        `;
+
+        return;
+    }
+
+
+    list.forEach((movie) => {
+
+        const card =
+            document.createElement(
+                "article"
+            );
+
+        card.className =
+            "movieCard";
+
+
+        if (movie.file) {
+
+            const video =
+                document.createElement(
+                    "video"
+                );
+
+            video.className =
+                "movieVideo";
+
+            video.controls = true;
+
+            video.preload =
+                "metadata";
+
+            const source =
+                document.createElement(
+                    "source"
+                );
+
+            source.src =
+                movie.file;
+
+            source.type =
+                movie.fileType ||
+                "video/mp4";
+
+            video.appendChild(
+                source
+            );
+
+            card.appendChild(
+                video
+            );
+
+        } else {
+
+            const placeholder =
+                document.createElement(
+                    "div"
+                );
+
+            placeholder.className =
+                "moviePlaceholder";
+
+            placeholder.textContent =
+                "🎬";
+
+            card.appendChild(
+                placeholder
+            );
+
+        }
+
+
+        const details =
+            document.createElement(
+                "div"
+            );
+
+        details.className =
+            "movieDetails";
+
+
+        details.innerHTML = `
+
+            <h3>
+                ${escapeHTML(movie.title)}
+            </h3>
+
+            <p>
+                Uploaded by
+                ${escapeHTML(movie.uploader)}
+            </p>
+
+        `;
+
+
+        card.appendChild(
+            details
+        );
+
+        container.appendChild(
+            card
+        );
+
+    });
 
 }
+
+
+/* =====================================================
+   COUNTERS
+===================================================== */
+
+function updateMediaCounters() {
+
+    document.getElementById(
+        "musicCount"
+    ).textContent =
+        musicFiles.length;
+
+
+    document.getElementById(
+        "movieCount"
+    ).textContent =
+        movieFiles.length;
+
+}
+
+
+updateMediaCounters();
+
+
+/* =====================================================
+   UPLOAD TYPE
+===================================================== */
+
+let uploadType =
+    "music";
+
+
+const uploadTabs =
+    document.querySelectorAll(
+        ".uploadTab"
+    );
+
+
+const mediaFile =
+    document.getElementById(
+        "mediaFile"
+    );
+
+
+const uploadIcon =
+    document.getElementById(
+        "uploadIcon"
+    );
+
+
+const uploadTitle =
+    document.getElementById(
+        "uploadTitle"
+    );
+
+
+const uploadDescription =
+    document.getElementById(
+        "uploadDescription"
+    );
+
+
+uploadTabs.forEach(tab => {
+
+    tab.addEventListener(
+        "click",
+        () => {
+
+            uploadTabs.forEach(
+                item =>
+                item.classList.remove(
+                    "active"
+                )
+            );
+
+            tab.classList.add(
+                "active"
+            );
+
+
+            uploadType =
+                tab.dataset.type;
+
+
+            if (
+                uploadType ===
+                "music"
+            ) {
+
+                uploadIcon.textContent =
+                    "🎵";
+
+                uploadTitle.textContent =
+                    "Upload Your Music";
+
+                uploadDescription.textContent =
+                    "Select an audio file from your device.";
+
+                mediaFile.accept =
+                    "audio/*";
+
+            } else {
+
+                uploadIcon.textContent =
+                    "🎬";
+
+                uploadTitle.textContent =
+                    "Upload Your Video";
+
+                uploadDescription.textContent =
+                    "Select a video file from your device.";
+
+                mediaFile.accept =
+                    "video/*";
+
+            }
+
+
+            mediaFile.value = "";
+
+            document.getElementById(
+                "selectedFile"
+            ).textContent =
+                "No file selected";
+
+        }
+    );
+
+});
+
+
+/* =====================================================
+   FILE SELECT
+===================================================== */
+
+mediaFile.addEventListener(
+    "change",
+    () => {
+
+        const file =
+            mediaFile.files[0];
+
+        if (!file) {
+
+            document.getElementById(
+                "selectedFile"
+            ).textContent =
+                "No file selected";
+
+            return;
+        }
+
+
+        document.getElementById(
+            "selectedFile"
+        ).textContent =
+            `${file.name} • ${formatBytes(file.size)}`;
+
+    }
+);
+
+
+/* =====================================================
+   DRAG & DROP
+===================================================== */
+
+const dropZone =
+    document.getElementById(
+        "dropZone"
+    );
+
+
+dropZone.addEventListener(
+    "dragover",
+    event => {
+
+        event.preventDefault();
+
+        dropZone.classList.add(
+            "dragover"
+        );
+
+    }
+);
+
+
+dropZone.addEventListener(
+    "dragleave",
+    () => {
+
+        dropZone.classList.remove(
+            "dragover"
+        );
+
+    }
+);
+
+
+dropZone.addEventListener(
+    "drop",
+    event => {
+
+        event.preventDefault();
+
+        dropZone.classList.remove(
+            "dragover"
+        );
+
+
+        const files =
+            event.dataTransfer.files;
+
+
+        if (files.length > 0) {
+
+            mediaFile.files =
+                files;
+
+            mediaFile.dispatchEvent(
+                new Event("change")
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   FILE SIZE
+===================================================== */
+
+function formatBytes(bytes) {
+
+    if (bytes === 0) {
+        return "0 Bytes";
+    }
+
+
+    const units = [
+        "Bytes",
+        "KB",
+        "MB",
+        "GB"
+    ];
+
+
+    const index =
+        Math.floor(
+            Math.log(bytes) /
+            Math.log(1024)
+        );
+
+
+    return (
+        parseFloat(
+            (
+                bytes /
+                Math.pow(
+                    1024,
+                    index
+                )
+            ).toFixed(2)
+        ) +
+        " " +
+        units[index]
+    );
+
+}
+
+
+/* =====================================================
+   UPLOAD
+===================================================== */
+
+document.getElementById(
+    "uploadForm"
+).addEventListener(
+    "submit",
+    function(event) {
+
+        event.preventDefault();
+
+
+        const file =
+            mediaFile.files[0];
+
+
+        const title =
+            document.getElementById(
+                "mediaTitle"
+            ).value.trim();
+
+
+        const uploader =
+            document.getElementById(
+                "uploaderName"
+            ).value.trim();
+
+
+        if (!file) {
+
+            showToast(
+                "Please select a file.",
+                "⚠️"
+            );
+
+            return;
+        }
+
+
+        if (!title) {
+
+            showToast(
+                "Enter a title.",
+                "⚠️"
+            );
+
+            return;
+        }
+
+
+        if (!uploader) {
+
+            showToast(
+                "Enter your name.",
+                "⚠️"
+            );
+
+            return;
+        }
+
+
+        /* ================= LIMIT ================= */
+
+        const maxSize =
+            100 * 1024 * 1024;
+
+
+        if (file.size > maxSize) {
+
+            showToast(
+                "Maximum file size is 100 MB.",
+                "⚠️"
+            );
+
+            return;
+        }
+
+
+        /* ================= TYPE ================= */
+
+        if (
+            uploadType === "music" &&
+            !file.type.startsWith(
+                "audio/"
+            )
+        ) {
+
+            showToast(
+                "Please select an audio file.",
+                "⚠️"
+            );
+
+            return;
+        }
+
+
+        if (
+            uploadType === "video" &&
+            !file.type.startsWith(
+                "video/"
+            )
+        ) {
+
+            showToast(
+                "Please select a video file.",
+                "⚠️"
+            );
+
+            return;
+        }
+
+
+        /*
+            DEMO LOCAL FILE URL
+
+            This works during the current
+            browser session.
+
+            For REAL PUBLIC UPLOADS,
+            replace this section with
+            Firebase/Supabase Storage.
+        */
+
+        const fileURL =
+            URL.createObjectURL(
+                file
+            );
+
+
+        const item = {
+
+            id:
+                Date.now().toString(),
+
+            title:
+                title,
+
+            uploader:
+                uploader,
+
+            file:
+                fileURL,
+
+            fileName:
+                file.name,
+
+            fileType:
+                file.type,
+
+            size:
+                file.size,
+
+            uploadedAt:
+                new Date().toISOString()
+
+        };
+
+
+        if (
+            uploadType ===
+            "music"
+        ) {
+
+            musicFiles.unshift(
+                item
+            );
+
+
+            /*
+                Store metadata.
+
+                NOTE:
+                Blob URL itself is temporary.
+            */
+
+            try {
+
+                localStorage.setItem(
+                    "trendoraMusicFiles",
+                    JSON.stringify(
+                        musicFiles
+                    )
+                );
+
+            } catch(error) {
+
+                console.log(
+                    "Browser storage limit reached."
+                );
+
+            }
+
+
+            renderMusic();
+
+
+        } else {
+
+            movieFiles.unshift(
+                item
+            );
+
+
+            try {
+
+                localStorage.setItem(
+                    "trendoraMovieFiles",
+                    JSON.stringify(
+                        movieFiles
+                    )
+                );
+
+            } catch(error) {
+
+                console.log(
+                    "Browser storage limit reached."
+                );
+
+            }
+
+
+            renderMovies();
+
+        }
+
+
+        updateMediaCounters();
+
+
+        this.reset();
+
+
+        document.getElementById(
+            "selectedFile"
+        ).textContent =
+            "No file selected";
+
+
+        showToast(
+            "Published successfully!",
+            "🚀"
+        );
+
+
+        setTimeout(() => {
+
+            if (
+                uploadType ===
+                "music"
+            ) {
+
+                document.getElementById(
+                    "music"
+                ).scrollIntoView({
+                    behavior: "smooth"
+                });
+
+            } else {
+
+                document.getElementById(
+                    "movies"
+                ).scrollIntoView({
+                    behavior: "smooth"
+                });
+
+            }
+
+        }, 400);
+
+    }
+);
 
 
 /* =====================================================
    MUSIC SEARCH
 ===================================================== */
 
-function searchMusic() {
+document.getElementById(
+    "musicSearch"
+).addEventListener(
+    "input",
+    function() {
 
-    const input =
-        document.getElementById("musicSearch");
-
-    const search =
-        input.value
+        const query =
+            this.value
             .toLowerCase()
             .trim();
 
 
-    const filtered =
-        musicLibrary.filter(song => {
+        const filtered =
+            musicFiles.filter(
+                item =>
 
-            const title =
-                song.title.toLowerCase();
+                item.title
+                    .toLowerCase()
+                    .includes(query)
 
-            const artist =
-                song.artist.toLowerCase();
+                ||
 
-            return (
-                title.includes(search) ||
-                artist.includes(search)
+                item.uploader
+                    .toLowerCase()
+                    .includes(query)
             );
 
-        });
 
+        renderMusic(
+            filtered
+        );
 
-    displayMusic(filtered);
-
-}
+    }
+);
 
 
 /* =====================================================
-   ADMIN LOGIN
+   MOVIE SEARCH
 ===================================================== */
 
-/*
-   IMPORTANT SECURITY NOTE:
+document.getElementById(
+    "movieSearch"
+).addEventListener(
+    "input",
+    function() {
 
-   This password is visible in browser JavaScript.
-
-   It is ONLY suitable for a demo.
-
-   Do NOT use this method for a real private
-   administrator account.
-
-   For a real Trendora admin system,
-   use Firebase/Supabase authentication.
-*/
-
-const ADMIN_PASSWORD =
-    "Trendora123";
+        const query =
+            this.value
+            .toLowerCase()
+            .trim();
 
 
-function unlockAdmin() {
+        const filtered =
+            movieFiles.filter(
+                item =>
 
-    const password =
-        document.getElementById(
-            "adminPassword"
-        ).value;
+                item.title
+                    .toLowerCase()
+                    .includes(query)
 
+                ||
 
-    if (password === ADMIN_PASSWORD) {
-
-        document
-            .getElementById("uploadArea")
-            .classList.remove("hidden");
-
-
-        showMessage(
-            "👑 Creator access unlocked!"
-        );
+                item.uploader
+                    .toLowerCase()
+                    .includes(query)
+            );
 
 
-    } else {
-
-        showMessage(
-            "❌ Incorrect admin password"
+        renderMovies(
+            filtered
         );
 
     }
-
-}
+);
 
 
 /* =====================================================
-   MUSIC UPLOAD
+   CATEGORY BUTTONS
 ===================================================== */
 
-function uploadMusic() {
+document.querySelectorAll(
+    ".categoryCard"
+).forEach(button => {
 
-    const title =
-        document
-            .getElementById("songTitle")
-            .value
-            .trim();
+    button.addEventListener(
+        "click",
+        () => {
 
+            const text =
+                button
+                .querySelector("span")
+                .textContent;
 
-    const artist =
-        document
-            .getElementById("artistName")
-            .value
-            .trim();
+            showToast(
+                `${text} category selected`,
+                "✨"
+            );
 
-
-    const file =
-        document
-            .getElementById("musicFile")
-            .files[0];
-
-
-    if (!title) {
-
-        showMessage(
-            "Please enter the song or movie name."
-        );
-
-        return;
-    }
-
-
-    if (!artist) {
-
-        showMessage(
-            "Please enter the artist name."
-        );
-
-        return;
-    }
-
-
-    if (!file) {
-
-        showMessage(
-            "Please choose an audio file."
-        );
-
-        return;
-    }
-
-
-    if (!file.type.startsWith("audio/")) {
-
-        showMessage(
-            "Please select a valid audio file."
-        );
-
-        return;
-    }
-
-
-    /*
-       Temporary browser URL.
-
-       This lets the current browser play
-       the selected audio file.
-    */
-
-    const audioURL =
-        URL.createObjectURL(file);
-
-
-    const newSong = {
-
-        title: title,
-
-        artist: artist,
-
-        url: audioURL
-
-    };
-
-
-    musicLibrary.push(newSong);
-
-
-    /*
-       Save metadata.
-
-       Browser-created Blob URLs are temporary,
-       so this is a demo/local system only.
-    */
-
-    try {
-
-        localStorage.setItem(
-            "trendoraMusic",
-            JSON.stringify(musicLibrary)
-        );
-
-    } catch (error) {
-
-        console.log(
-            "Could not save music metadata:",
-            error
-        );
-
-    }
-
-
-    displayMusic();
-
-
-    document
-        .getElementById("songTitle")
-        .value = "";
-
-
-    document
-        .getElementById("artistName")
-        .value = "";
-
-
-    document
-        .getElementById("musicFile")
-        .value = "";
-
-
-    showMessage(
-        "🎵 Music added to Trendora!"
+        }
     );
 
-}
+});
 
 
 /* =====================================================
@@ -593,60 +1123,75 @@ function uploadMusic() {
 
 const sections =
     document.querySelectorAll(
-        "main section[id]"
+        "section[id]"
     );
 
 
-const navLinks =
-    document.querySelectorAll(
-        "#navMenu a"
-    );
+window.addEventListener(
+    "scroll",
+    () => {
+
+        let current = "";
 
 
-window.addEventListener("scroll", () => {
+        sections.forEach(
+            section => {
 
-    let current = "home";
-
-
-    sections.forEach(section => {
-
-        const sectionTop =
-            section.offsetTop - 120;
-
-        if (
-            window.scrollY >= sectionTop
-        ) {
-            current =
-                section.getAttribute("id");
-        }
-
-    });
+                const top =
+                    section.offsetTop
+                    - 150;
 
 
-    navLinks.forEach(link => {
+                if (
+                    window.scrollY >=
+                    top
+                ) {
 
-        link.classList.remove("active");
+                    current =
+                        section.id;
+
+                }
+
+            }
+        );
 
 
-        const href =
-            link.getAttribute("href");
+        document.querySelectorAll(
+            "#mainNav a"
+        ).forEach(
+            link => {
+
+                link.classList.remove(
+                    "active"
+                );
 
 
-        if (href === "#" + current) {
+                if (
+                    link.getAttribute(
+                        "href"
+                    ) ===
+                    "#" + current
+                ) {
 
-            link.classList.add("active");
+                    link.classList.add(
+                        "active"
+                    );
 
-        }
+                }
 
-    });
+            }
+        );
 
-});
+    }
+);
 
 
 /* =====================================================
    INITIALIZE
 ===================================================== */
 
-displayMusic();
+renderMusic();
 
-updateSongCount();
+renderMovies();
+
+updateMediaCounters();
