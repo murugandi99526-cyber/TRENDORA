@@ -4,436 +4,616 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Trendora | Trending Topics & Movie Music</title>
-    <meta name="description" content="Discover trending topics, movie music and viral content on Trendora.">
+    <meta name="description" content="Trendora - Discover trending music, movies and entertainment.">
+    <meta name="theme-color" content="#070914">
+
+    <title>TRENDORA — Discover What's Trending</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-    <div class="background-orb orb-one"></div>
-    <div class="background-orb orb-two"></div>
-
-    <!-- Navigation -->
-    <header class="navbar">
-        <a href="#home" class="brand">
-            <img src="logo.png" alt="Trendora Logo">
-            <span>Trendora</span>
-        </a>
-
-        <nav class="nav-links" id="navLinks">
-            <a href="#home">Home</a>
-            <a href="#trending">Trending</a>
-            <a href="#movieMusic">Movie Music</a>
-            <a href="#battle">Battle</a>
-            <a href="#about">About</a>
-        </nav>
-
-        <button class="menu-button" id="menuButton">☰</button>
-    </header>
-
-
-    <!-- Hero -->
-    <main>
-        <section class="hero-section" id="home">
-
-            <div class="hero-content">
-                <div class="hero-badge">🔥 THE INTERNET'S TRENDING ZONE</div>
-
-                <h1>
-                    Discover What's
-                    <span>Trending</span>
-                    Today.
-                </h1>
-
-                <p>
-                    Explore viral topics, popular discussions, movie music
-                    and the latest things everyone is talking about.
-                </p>
-
-                <div class="hero-buttons">
-                    <button class="primary-button" onclick="scrollToTrending()">
-                        Explore Trends →
-                    </button>
-
-                    <button class="secondary-button" onclick="scrollToMusic()">
-                        🎵 Movie Music
-                    </button>
-                </div>
-
-                <div class="hero-stats">
-                    <div class="stat-box">
-                        <strong id="topicCount">0</strong>
-                        <span>Trending Topics</span>
-                    </div>
-
-                    <div class="stat-box">
-                        <strong id="visitorCount">...</strong>
-                        <span>Total Visitors</span>
-                    </div>
-
-                    <div class="stat-box">
-                        <strong>24/7</strong>
-                        <span>Fresh Updates</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="hero-preview">
-                <div class="preview-window">
-                    <div class="preview-topbar">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-
-                    <div class="preview-header">
-                        <img src="logo.png" alt="Trendora">
-                        <div class="preview-search">🔍 Search trends...</div>
-                    </div>
-
-                    <h3>What's Trending?</h3>
-
-                    <div class="preview-card">
-                        <span>🔥</span>
-                        <div>
-                            <b>Viral Topics</b>
-                            <small>Discover now</small>
-                        </div>
-                    </div>
-
-                    <div class="preview-card">
-                        <span>🎵</span>
-                        <div>
-                            <b>Movie Music</b>
-                            <small>Listen to hits</small>
-                        </div>
-                    </div>
-
-                    <div class="preview-card">
-                        <span>⚡</span>
-                        <div>
-                            <b>Trend Battle</b>
-                            <small>Choose your favorite</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-
-        <!-- Trending -->
-        <section class="section-container" id="trending">
-
-            <div class="section-heading">
-                <div>
-                    <span class="section-tag">🔥 LIVE UPDATES</span>
-                    <h2>Trending Now</h2>
-                    <p>See what people are talking about right now.</p>
-                </div>
-
-                <div class="live-indicator">
-                    <span></span> Live
-                </div>
-            </div>
-
-            <div class="search-container">
-                <span>🔍</span>
-                <input
-                    type="search"
-                    id="searchInput"
-                    placeholder="Search trending topics...">
-            </div>
-
-            <div class="category-filters">
-                <button class="filter-button active" data-category="all">All</button>
-                <button class="filter-button" data-category="music">🎵 Music</button>
-                <button class="filter-button" data-category="movies">🎬 Movies</button>
-                <button class="filter-button" data-category="technology">💻 Technology</button>
-                <button class="filter-button" data-category="sports">⚽ Sports</button>
-                <button class="filter-button" data-category="viral">🚀 Viral</button>
-            </div>
-
-            <div class="live-trending-box">
-                <div class="live-box-heading">
-                    <strong><span class="live-dot"></span> Live Trending Topics</strong>
-                    <span id="liveUpdateTime">Updated just now</span>
-                </div>
-
-                <div id="liveTrendingList" class="live-trending-list"></div>
-            </div>
-
-            <div class="trending-grid" id="trendingGrid"></div>
-
-            <div class="empty-state" id="emptyState">
-                <div>🔎</div>
-                <h3>No trends found</h3>
-                <p>Try searching for something else.</p>
-            </div>
-
-        </section>
-
-
-        <!-- Movie Music -->
-        <section class="music-section" id="movieMusic">
-
-            <div class="section-heading">
-                <div>
-                    <span class="section-tag">🎬 MOVIE MUSIC</span>
-                    <h2>Feel the Music</h2>
-                    <p>Discover movie songs and official music releases.</p>
-                </div>
-
-                <div class="music-note">♫</div>
-            </div>
-
-            <div class="search-container">
-                <span>🎵</span>
-                <input
-                    type="search"
-                    id="musicSearchInput"
-                    placeholder="Search songs or movies...">
-            </div>
-
-            <div class="category-filters">
-                <button class="music-filter active" data-music-category="all">
-                    All Songs
-                </button>
-                <button class="music-filter" data-music-category="tamil">
-                    Tamil
-                </button>
-                <button class="music-filter" data-music-category="telugu">
-                    Telugu
-                </button>
-                <button class="music-filter" data-music-category="hindi">
-                    Hindi
-                </button>
-            </div>
-
-            <div class="music-grid" id="musicGrid">
-
-                <!-- Change these details and official YouTube links -->
-                <article class="music-card" data-music-category="tamil">
-                    <div class="music-cover">
-                        <img src="logo.png" alt="Tamil movie music">
-                        <div class="music-overlay">
-                            <a href="https://www.youtube.com/"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               class="music-play-button">▶</a>
-                        </div>
-                    </div>
-
-                    <div class="music-card-content">
-                        <span class="music-language">TAMIL • TRENDING</span>
-                        <h3>Latest Tamil Hit</h3>
-                        <p class="music-movie">🎬 Movie Name</p>
-                        <p class="music-details">🎤 Singer Name</p>
-
-                        <div class="music-card-bottom">
-                            <span>🎵 Official Release</span>
-                            <a href="https://www.youtube.com/"
-                               target="_blank"
-                               rel="noopener noreferrer">
-                                Listen ↗
-                            </a>
-                        </div>
-                    </div>
-                </article>
-
-
-                <article class="music-card" data-music-category="tamil">
-                    <div class="music-cover">
-                        <img src="logo.png" alt="Tamil movie music">
-                        <div class="music-overlay">
-                            <a href="https://www.youtube.com/"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               class="music-play-button">▶</a>
-                        </div>
-                    </div>
-
-                    <div class="music-card-content">
-                        <span class="music-language">TAMIL • NEW</span>
-                        <h3>New Movie Song</h3>
-                        <p class="music-movie">🎬 Movie Name</p>
-                        <p class="music-details">🎤 Singer Name</p>
-
-                        <div class="music-card-bottom">
-                            <span>🎵 Official Release</span>
-                            <a href="https://www.youtube.com/"
-                               target="_blank"
-                               rel="noopener noreferrer">
-                                Listen ↗
-                            </a>
-                        </div>
-                    </div>
-                </article>
-
-
-                <article class="music-card" data-music-category="telugu">
-                    <div class="music-cover">
-                        <img src="logo.png" alt="Telugu movie music">
-                        <div class="music-overlay">
-                            <a href="https://www.youtube.com/"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               class="music-play-button">▶</a>
-                        </div>
-                    </div>
-
-                    <div class="music-card-content">
-                        <span class="music-language">TELUGU • POPULAR</span>
-                        <h3>Popular Telugu Song</h3>
-                        <p class="music-movie">🎬 Movie Name</p>
-                        <p class="music-details">🎤 Singer Name</p>
-
-                        <div class="music-card-bottom">
-                            <span>🎵 Official Release</span>
-                            <a href="https://www.youtube.com/"
-                               target="_blank"
-                               rel="noopener noreferrer">
-                                Listen ↗
-                            </a>
-                        </div>
-                    </div>
-                </article>
-
-
-                <article class="music-card" data-music-category="hindi">
-                    <div class="music-cover">
-                        <img src="logo.png" alt="Hindi movie music">
-                        <div class="music-overlay">
-                            <a href="https://www.youtube.com/"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               class="music-play-button">▶</a>
-                        </div>
-                    </div>
-
-                    <div class="music-card-content">
-                        <span class="music-language">HINDI • VIRAL</span>
-                        <h3>Viral Hindi Song</h3>
-                        <p class="music-movie">🎬 Movie Name</p>
-                        <p class="music-details">🎤 Singer Name</p>
-
-                        <div class="music-card-bottom">
-                            <span>🎵 Official Release</span>
-                            <a href="https://www.youtube.com/"
-                               target="_blank"
-                               rel="noopener noreferrer">
-                                Listen ↗
-                            </a>
-                        </div>
-                    </div>
-                </article>
-
-            </div>
-
-            <p class="music-footer">🎧 More songs will be added soon.</p>
-
-        </section>
-
-
-        <!-- Trend Battle -->
-        <section class="battle-section" id="battle">
-
-            <div class="section-heading">
-                <div>
-                    <span class="section-tag">⚡ COMMUNITY CHOICE</span>
-                    <h2>Trend Battle</h2>
-                    <p>Which one is more popular? You decide.</p>
-                </div>
-            </div>
-
-            <div class="battle-card">
-                <div class="battle-option">
-                    <span>🎵</span>
-                    <h3>Music</h3>
-                    <button onclick="voteBattle('A')">Vote</button>
-                    <div id="voteCountA">0 votes</div>
-                </div>
-
-                <div class="battle-vs">VS</div>
-
-                <div class="battle-option">
-                    <span>🎬</span>
-                    <h3>Movies</h3>
-                    <button onclick="voteBattle('B')">Vote</button>
-                    <div id="voteCountB">0 votes</div>
-                </div>
-            </div>
-
-        </section>
-
-
-        <!-- About -->
-        <section class="about-section" id="about">
-            <div class="about-content">
-                <span class="section-tag">✨ ABOUT TRENDORA</span>
-                <h2>Your Daily Dose of What's Trending.</h2>
-                <p>
-                    Trendora brings trending topics, viral discussions,
-                    movie music and exciting discoveries together in one place.
-                </p>
-
-                <div class="feature-list">
-                    <div class="feature-item">
-                        <span>🔥</span>
-                        <div>
-                            <h3>Fresh Trends</h3>
-                            <p>Discover popular topics and discussions.</p>
-                        </div>
-                    </div>
-
-                    <div class="feature-item">
-                        <span>🎵</span>
-                        <div>
-                            <h3>Movie Music</h3>
-                            <p>Find official movie songs and music releases.</p>
-                        </div>
-                    </div>
-
-                    <div class="feature-item">
-                        <span>⚡</span>
-                        <div>
-                            <h3>Community Choice</h3>
-                            <p>Vote and share your favorite trends.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-brand">
-            <img src="logo.png" alt="Trendora Logo">
-            <strong>Trendora</strong>
+<!-- ================= PRELOADER ================= -->
+
+<div id="preloader">
+    <div class="loader-logo">
+        <img src="logo.png" alt="Trendora">
+        <h1>TRENDORA</h1>
+        <p>LOADING THE TREND...</p>
+        <div class="loader-line">
+            <span></span>
+        </div>
+    </div>
+</div>
+
+
+<!-- ================= HEADER ================= -->
+
+<header class="header">
+
+    <a href="#home" class="brand">
+        <img src="logo.png" alt="Trendora Logo">
+        <div>
+            <strong>TRENDORA</strong>
+            <small>DISCOVER THE TREND</small>
+        </div>
+    </a>
+
+    <nav id="navMenu">
+        <a href="#home" class="active">Home</a>
+        <a href="#trending">Trending</a>
+        <a href="#music">Music</a>
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+    </nav>
+
+    <div class="header-right">
+        <div class="live-users">
+            <span></span>
+            <b id="headerOnline">1</b>
+            <small>LIVE</small>
         </div>
 
-        <p>Discover. Explore. Stay Trending.</p>
+        <button class="menu-button" onclick="toggleMenu()">☰</button>
+    </div>
+
+</header>
+
+
+<!-- ================= HERO ================= -->
+
+<main id="home">
+
+<section class="hero">
+
+    <div class="hero-glow glow-one"></div>
+    <div class="hero-glow glow-two"></div>
+
+    <div class="hero-content">
+
+        <div class="hero-tag">
+            <span class="tag-dot"></span>
+            WHAT'S HOT RIGHT NOW
+        </div>
+
+        <h1>
+            YOUR WORLD.
+            <br>
+            <span>YOUR TREND.</span>
+            <br>
+            YOUR <i>VIBE.</i>
+        </h1>
+
+        <p class="hero-text">
+            Welcome to <b>Trendora</b> — discover music, movies,
+            viral topics and entertainment that everyone is talking about.
+        </p>
+
+        <div class="hero-buttons">
+
+            <button class="btn-primary"
+                    onclick="scrollToSection('trending')">
+                EXPLORE TRENDING
+                <span>→</span>
+            </button>
+
+            <button class="btn-glass"
+                    onclick="scrollToSection('music')">
+                <span>▶</span>
+                MOVIE MUSIC
+            </button>
+
+        </div>
+
+        <div class="hero-mini-stats">
+
+            <div>
+                <strong id="heroVisitors">0</strong>
+                <span>VISITORS</span>
+            </div>
+
+            <div class="stat-divider"></div>
+
+            <div>
+                <strong id="heroSongs">0</strong>
+                <span>MUSIC</span>
+            </div>
+
+            <div class="stat-divider"></div>
+
+            <div>
+                <strong>24/7</strong>
+                <span>TRENDS</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- HERO VISUAL -->
+
+    <div class="hero-visual">
+
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+
+        <div class="hero-logo-card">
+
+            <div class="floating-icon icon-one">🎵</div>
+            <div class="floating-icon icon-two">🔥</div>
+            <div class="floating-icon icon-three">🎬</div>
+
+            <div class="hero-logo-circle">
+                <img src="logo.png" alt="Trendora">
+            </div>
+
+            <div class="hero-card-text">
+                <small>WELCOME TO</small>
+                <strong>TRENDORA</strong>
+                <span>THE TREND HUB</span>
+            </div>
+
+        </div>
+
+        <div class="floating-card card-top">
+            <span>🔥</span>
+            <div>
+                <small>NOW TRENDING</small>
+                <b>Entertainment</b>
+            </div>
+        </div>
+
+        <div class="floating-card card-bottom">
+            <span>🟢</span>
+            <div>
+                <small>PEOPLE ONLINE</small>
+                <b id="heroOnline">1 watching</b>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= QUICK STATS ================= -->
+
+<section class="stats-section">
+
+    <div class="stat-card">
+        <div class="stat-icon purple">👀</div>
+        <div>
+            <span>TOTAL VISITORS</span>
+            <strong id="visitorCount">0</strong>
+            <small>Trendora visits</small>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon green">🟢</div>
+        <div>
+            <span>WATCHING NOW</span>
+            <strong id="liveCount">1</strong>
+            <small>People online</small>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon pink">🎵</div>
+        <div>
+            <span>MUSIC LIBRARY</span>
+            <strong id="songCount">0</strong>
+            <small>Tracks available</small>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon orange">⚡</div>
+        <div>
+            <span>PLATFORM</span>
+            <strong>24/7</strong>
+            <small>Always trending</small>
+        </div>
+    </div>
+
+</section>
+
+
+<!-- ================= TRENDING ================= -->
+
+<section id="trending" class="section trending-section">
+
+    <div class="section-heading">
+
+        <div>
+            <span class="section-label">🔥 TRENDING ZONE</span>
+            <h2>What's <span>Trending?</span></h2>
+            <p>Explore the things getting everyone's attention.</p>
+        </div>
+
+        <button class="view-all"
+                onclick="showMessage('More trends coming soon!')">
+            VIEW ALL →
+        </button>
+
+    </div>
+
+
+    <div class="trend-grid">
+
+        <article class="trend-card trend-main">
+
+            <div class="trend-art movie-art">
+                <div class="art-number">01</div>
+                <div class="big-art-icon">🎬</div>
+                <span class="art-pill">MOVIES</span>
+            </div>
+
+            <div class="trend-content">
+                <div class="trend-meta">
+                    <span>🎬 ENTERTAINMENT</span>
+                    <span>HOT 🔥</span>
+                </div>
+
+                <h3>Movie Trends</h3>
+
+                <p>
+                    Discover the movies and entertainment
+                    everyone is talking about.
+                </p>
+
+                <button onclick="showMessage('Movie trends are coming soon!')">
+                    EXPLORE MOVIES →
+                </button>
+            </div>
+
+        </article>
+
+
+        <article class="trend-card">
+
+            <div class="trend-art music-art">
+                <div class="art-number">02</div>
+                <div class="big-art-icon">🎵</div>
+                <span class="art-pill">MUSIC</span>
+            </div>
+
+            <div class="trend-content">
+                <div class="trend-meta">
+                    <span>🎵 MUSIC</span>
+                    <span>NEW</span>
+                </div>
+
+                <h3>Trending Music</h3>
+
+                <p>
+                    Find music and movie tracks
+                    uploaded to Trendora.
+                </p>
+
+                <button onclick="scrollToSection('music')">
+                    LISTEN NOW →
+                </button>
+            </div>
+
+        </article>
+
+
+        <article class="trend-card">
+
+            <div class="trend-art viral-art">
+                <div class="art-number">03</div>
+                <div class="big-art-icon">⚡</div>
+                <span class="art-pill">VIRAL</span>
+            </div>
+
+            <div class="trend-content">
+                <div class="trend-meta">
+                    <span>⚡ VIRAL</span>
+                    <span>HOT</span>
+                </div>
+
+                <h3>Viral Topics</h3>
+
+                <p>
+                    Discover interesting topics
+                    gaining attention online.
+                </p>
+
+                <button onclick="showMessage('Viral topics coming soon!')">
+                    DISCOVER →
+                </button>
+            </div>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- ================= MUSIC ================= -->
+
+<section id="music" class="music-section">
+
+    <div class="music-background">
+        <div class="music-glow"></div>
+    </div>
+
+    <div class="section-heading music-heading">
+
+        <div>
+            <span class="section-label">🎵 TRENDORA MUSIC</span>
+            <h2>Movie <span>Music</span></h2>
+            <p>Listen to tracks available on Trendora.</p>
+        </div>
+
+        <div class="music-live">
+            <span></span>
+            MUSIC PLAYER
+        </div>
+
+    </div>
+
+
+    <!-- MUSIC SEARCH -->
+
+    <div class="music-toolbar">
+
+        <div class="search-box">
+            <span>⌕</span>
+            <input
+                id="musicSearch"
+                type="text"
+                placeholder="Search song, movie or artist..."
+                oninput="searchMusic()">
+        </div>
+
+        <button class="filter-button"
+                onclick="showMessage('All music selected')">
+            ALL MUSIC ▾
+        </button>
+
+    </div>
+
+
+    <!-- MUSIC LIST -->
+
+    <div id="musicList" class="music-list"></div>
+
+
+    <!-- EMPTY / ADMIN -->
+
+    <div class="admin-section">
+
+        <div class="admin-header">
+
+            <div class="admin-icon">👑</div>
+
+            <div>
+                <span>CREATOR AREA</span>
+                <h3>Admin Music Upload</h3>
+                <p>
+                    Upload new tracks to your Trendora music library.
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="admin-login">
+
+            <input
+                type="password"
+                id="adminPassword"
+                placeholder="Enter admin password">
+
+            <button onclick="unlockAdmin()">
+                UNLOCK
+            </button>
+
+        </div>
+
+
+        <div id="uploadArea" class="upload-area hidden">
+
+            <div class="upload-grid">
+
+                <input
+                    type="text"
+                    id="songTitle"
+                    placeholder="Song / Movie name">
+
+                <input
+                    type="text"
+                    id="artistName"
+                    placeholder="Artist name">
+
+            </div>
+
+            <label class="file-upload">
+
+                <span>🎵</span>
+
+                <div>
+                    <strong>Choose audio file</strong>
+                    <small>MP3, WAV, OGG and other audio formats</small>
+                </div>
+
+                <input
+                    type="file"
+                    id="musicFile"
+                    accept="audio/*">
+
+            </label>
+
+            <button
+                class="upload-button"
+                onclick="uploadMusic()">
+                ⬆ ADD MUSIC TO TRENDORA
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FEATURES ================= -->
+
+<section id="features" class="section features-section">
+
+    <div class="section-heading centered">
+
+        <div>
+            <span class="section-label">✨ WHY TRENDORA?</span>
+            <h2>Made for the <span>Next Generation</span></h2>
+            <p>
+                A fun place to discover what is happening right now.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+        <div class="feature-card">
+            <div class="feature-number">01</div>
+            <div class="feature-icon">🔥</div>
+            <h3>Trending</h3>
+            <p>
+                Find popular entertainment and
+                topics in one place.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-number">02</div>
+            <div class="feature-icon">🎵</div>
+            <h3>Music</h3>
+            <p>
+                Explore a growing collection
+                of movie music.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-number">03</div>
+            <div class="feature-icon">⚡</div>
+            <h3>Fast</h3>
+            <p>
+                Designed to work smoothly
+                on phones and computers.
+            </p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-number">04</div>
+            <div class="feature-icon">🌎</div>
+            <h3>Community</h3>
+            <p>
+                Built as a place where people
+                can discover new things.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ABOUT ================= -->
+
+<section id="about" class="about-section">
+
+    <div class="about-container">
+
+        <div class="about-logo">
+            <img src="logo.png" alt="Trendora">
+        </div>
+
+        <div class="about-content">
+
+            <span class="section-label">ABOUT TRENDORA</span>
+
+            <h2>
+                More than a website.
+                <br>
+                <span>It's a trend hub.</span>
+            </h2>
+
+            <p>
+                Trendora brings trending entertainment, music,
+                movies and interesting topics together in a
+                simple and exciting experience.
+            </p>
+
+            <div class="about-points">
+                <span>✓ Easy to explore</span>
+                <span>✓ Mobile friendly</span>
+                <span>✓ Built for discovery</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <div class="footer-top">
+
+        <div class="footer-brand">
+
+            <img src="logo.png" alt="Trendora">
+
+            <div>
+                <strong>TRENDORA</strong>
+                <span>DISCOVER THE TREND</span>
+            </div>
+
+        </div>
 
         <div class="footer-links">
             <a href="#home">Home</a>
             <a href="#trending">Trending</a>
-            <a href="#movieMusic">Music</a>
+            <a href="#music">Music</a>
             <a href="#about">About</a>
         </div>
 
-        <div class="footer-bottom">
-            <p>© 2026 Trendora. All rights reserved.</p>
-            <p>Made with 💙 for trend lovers.</p>
-        </div>
-    </footer>
+    </div>
+
+    <div class="footer-bottom">
+
+        <p>
+            © <span id="year"></span> TRENDORA
+        </p>
+
+        <p>
+            Made for discovery • Built for everyone
+        </p>
+
+    </div>
+
+</footer>
+
+</main>
 
 
-    <button class="back-to-top" id="backToTop">↑</button>
+<!-- ================= MESSAGE ================= -->
 
-    <script src="script.js"></script>
+<div id="messageBox" class="message-box"></div>
+
+
+<script src="script.js"></script>
+
 </body>
     </html>
