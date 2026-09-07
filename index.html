@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,290 +8,192 @@
 
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
     <!-- NAVBAR -->
     <header class="navbar">
+        <div class="logo-container">
+            <img src="logo.png" alt="Trendora Logo" class="logo">
+            <span>Trendora</span>
+        </div>
 
-        <a href="#" class="logo">
-            <span class="logo-symbol">T</span>
-            <span>Trend<span>ora</span></span>
-        </a>
-
-        <nav class="nav-links">
+        <nav>
             <a href="#home">Home</a>
             <a href="#trending">Trending</a>
             <a href="#battle">Battle</a>
             <a href="#about">About</a>
         </nav>
 
-        <button class="menu-btn" id="menuBtn">☰</button>
-
+        <button class="menu-button" onclick="toggleMenu()">☰</button>
     </header>
 
 
-    <!-- MOBILE MENU -->
-    <div class="mobile-menu" id="mobileMenu">
-        <a href="#home">Home</a>
-        <a href="#trending">Trending</a>
-        <a href="#battle">Battle</a>
-        <a href="#about">About</a>
-    </div>
-
-
-    <!-- HERO -->
+    <!-- HERO SECTION -->
     <section class="hero" id="home">
-
         <div class="hero-content">
-
-            <div class="hero-badge">
-                🔥 Discover What's Trending
-            </div>
+            <p class="small-title">WELCOME TO THE FUTURE OF TRENDS</p>
 
             <h1>
-                The Internet's<br>
-                <span>Trending Universe</span>
+                Discover What's
+                <span>Trending</span>
             </h1>
 
-            <p>
-                Discover music, movies, gaming, AI, memes and
-                everything people are talking about.
+            <p class="hero-text">
+                Explore the latest songs, movies, technology, games,
+                fashion and everything people are talking about.
             </p>
 
-            <div class="hero-buttons">
-
-                <button class="primary-btn" onclick="scrollToTrending()">
-                    Explore Trends <span>→</span>
-                </button>
-
-                <button class="secondary-btn" onclick="scrollToBattle()">
-                    ⚔️ Trend Battle
-                </button>
-
-            </div>
-
+            <button class="explore-button" onclick="scrollToTrending()">
+                Explore Trends ↓
+            </button>
         </div>
 
+        <div class="hero-circle">
+            <div class="hero-icon">🔥</div>
+        </div>
     </section>
 
 
-    <!-- SEARCH -->
+    <!-- SEARCH SECTION -->
     <section class="search-section">
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search trending topics..."
+            onkeyup="searchTrends()"
+        >
 
-        <div class="search-box">
-
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Search music, movies, gaming, AI..."
-            >
-
-            <button onclick="searchTrends()">
-                🔍 Search
-            </button>
-
-        </div>
-
+        <button onclick="searchTrends()">🔍 Search</button>
     </section>
 
 
     <!-- LIVE TRENDING -->
-    <section class="live-trending-section">
-
+    <section class="section live-section">
         <div class="section-heading">
-
-            <span class="small-label">LIVE UPDATES</span>
-
-            <h2>Trending Now 🔥</h2>
-
-            <p>Popular topics people are discovering right now.</p>
-
+            <p class="section-label">HAPPENING NOW</p>
+            <h2>Trending <span>Now</span></h2>
+            <p>Topics that are getting attention right now.</p>
         </div>
 
-        <div class="live-trending-grid" id="liveTrendingGrid"></div>
-
+        <div class="trend-grid" id="liveTrendingGrid"></div>
     </section>
 
 
-    <!-- TRENDING -->
-    <section class="trending-section" id="trending">
-
+    <!-- TRENDING SECTION -->
+    <section class="section" id="trending">
         <div class="section-heading">
-
-            <span class="small-label">EXPLORE</span>
-
-            <h2>Discover Trends</h2>
-
-            <p>Find something interesting and share it with others.</p>
-
+            <p class="section-label">EXPLORE EVERYTHING</p>
+            <h2>Popular <span>Trends</span></h2>
+            <p>Find interesting topics from different categories.</p>
         </div>
 
-
-        <!-- FILTERS -->
-        <div class="filter-buttons">
-
-            <button class="filter-btn active" data-category="all">
+        <div class="category-buttons">
+            <button class="category-button active" onclick="filterTrends('all', this)">
                 All
             </button>
 
-            <button class="filter-btn" data-category="music">
+            <button class="category-button" onclick="filterTrends('music', this)">
                 🎵 Music
             </button>
 
-            <button class="filter-btn" data-category="movies">
+            <button class="category-button" onclick="filterTrends('movies', this)">
                 🎬 Movies
             </button>
 
-            <button class="filter-btn" data-category="gaming">
+            <button class="category-button" onclick="filterTrends('technology', this)">
+                💻 Technology
+            </button>
+
+            <button class="category-button" onclick="filterTrends('gaming', this)">
                 🎮 Gaming
             </button>
 
-            <button class="filter-btn" data-category="ai">
-                🤖 AI
+            <button class="category-button" onclick="filterTrends('fashion', this)">
+                👕 Fashion
             </button>
-
-            <button class="filter-btn" data-category="internet">
-                🌐 Internet
-            </button>
-
         </div>
 
-
-        <!-- TREND CARDS -->
         <div class="trend-grid" id="trendGrid"></div>
-
-
-        <div class="show-all-container">
-
-            <button class="explore-btn" onclick="showAllTrends()">
-                Show All Trends →
-            </button>
-
-        </div>
-
     </section>
 
 
     <!-- TREND BATTLE -->
-    <section class="battle-section" id="battle">
-
+    <section class="section battle-section" id="battle">
         <div class="section-heading">
-
-            <span class="small-label">COMMUNITY VOTE</span>
-
-            <h2>Trend Battle ⚔️</h2>
-
-            <p>Which trend is more popular? You decide!</p>
-
+            <p class="section-label">CHOOSE YOUR FAVORITE</p>
+            <h2>Trend <span>Battle</span></h2>
+            <p>Which trend deserves the top position?</p>
         </div>
 
         <div class="battle-container">
 
-            <div class="battle-options">
-
-                <div class="battle-card">
-
-                    <div class="battle-icon">🎵</div>
-
-                    <h3>Aasa Kooda</h3>
-
-                    <p>Music Trend</p>
-
-                    <button onclick="vote('Aasa Kooda', this)">
-                        Vote
-                    </button>
-
-                </div>
-
-
-                <div class="battle-card">
-
-                    <div class="battle-icon">🎬</div>
-
-                    <h3>Latest Movie</h3>
-
-                    <p>Movie Trend</p>
-
-                    <button onclick="vote('Latest Movie', this)">
-                        Vote
-                    </button>
-
-                </div>
-
+            <div class="battle-card">
+                <div class="battle-emoji">🎵</div>
+                <h3>Aasa Kooda</h3>
+                <p>Music Trend</p>
+                <button onclick="voteBattle('aasa')">
+                    Vote ❤️
+                </button>
+                <p id="aasaVotes">Votes: 0</p>
             </div>
 
-            <div id="battleResult">
-                Vote to see the leading trend!
+            <div class="vs">VS</div>
+
+            <div class="battle-card">
+                <div class="battle-emoji">🎬</div>
+                <h3>Latest Movie</h3>
+                <p>Movie Trend</p>
+                <button onclick="voteBattle('movie')">
+                    Vote ❤️
+                </button>
+                <p id="movieVotes">Votes: 0</p>
             </div>
 
         </div>
-
     </section>
 
 
-    <!-- ABOUT -->
-    <section class="about-section" id="about">
-
+    <!-- ABOUT SECTION -->
+    <section class="section about-section" id="about">
         <div class="section-heading">
-
-            <span class="small-label">WHY TRENDORA?</span>
-
-            <h2>One Place. Every Trend.</h2>
-
-            <p>Explore what makes the internet interesting.</p>
-
+            <p class="section-label">WHY TRENDORA?</p>
+            <h2>One Place. <span>Every Trend.</span></h2>
         </div>
 
-
-        <div class="features-grid">
-
-            <div class="feature-card">
-                <div class="feature-icon">🔥</div>
-                <h3>Trending Topics</h3>
-                <p>Discover popular topics from different categories.</p>
+        <div class="about-grid">
+            <div class="about-card">
+                <div>⚡</div>
+                <h3>Fast Updates</h3>
+                <p>Discover popular topics quickly and easily.</p>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">❤️</div>
-                <h3>Like & Share</h3>
-                <p>Support interesting trends and share them with friends.</p>
+            <div class="about-card">
+                <div>🌍</div>
+                <h3>Different Categories</h3>
+                <p>Explore music, movies, gaming, technology and more.</p>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">⚔️</div>
-                <h3>Community Battle</h3>
-                <p>Vote and see which trend wins.</p>
+            <div class="about-card">
+                <div>❤️</div>
+                <h3>Community Choice</h3>
+                <p>Like, share and vote for your favorite trends.</p>
             </div>
-
         </div>
-
     </section>
 
 
     <!-- FOOTER -->
     <footer>
-
         <div class="footer-logo">
-            <span class="logo-symbol">T</span>
-            Trend<span>ora</span>
+            <img src="logo.png" alt="Trendora Logo">
+            <span>Trendora</span>
         </div>
 
         <p>Discover. Explore. Share.</p>
-
-        <p class="copyright">
-            © 2026 Trendora. All rights reserved.
-        </p>
-
+        <p class="copyright">© 2026 Trendora. All rights reserved.</p>
     </footer>
 
 
-    <!-- TOAST -->
-    <div id="toast"></div>
-
-
     <script src="script.js"></script>
-
 </body>
-
     </html>
