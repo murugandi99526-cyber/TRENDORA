@@ -1214,3 +1214,59 @@ button {
     }
 
 }
+.music-section {
+    padding: 80px 5%;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.music-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-top: 30px;
+}
+
+.music-card {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(12px);
+    transition: 0.3s;
+}
+
+.music-card:hover {
+    transform: translateY(-6px);
+    border-color: #00e5ff;
+}
+
+.music-card img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 14px;
+}
+
+.music-info h3 {
+    margin: 0 0 8px;
+}
+
+.music-info p {
+    color: #aaa;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.play-button {
+    display: inline-block;
+    padding: 9px 14px;
+    border-radius: 20px;
+    background: #00e5ff;
+    color: #071018;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+    }
