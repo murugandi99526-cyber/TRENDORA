@@ -314,11 +314,13 @@ function showAllTrends() {
 ========================= */
 
 function scrollToTrending() {
+    const trendingSection = document.getElementById("trending");
 
-    document.getElementById("trending").scrollIntoView({
-        behavior: "smooth"
-    });
-
+    if (trendingSection) {
+        trendingSection.scrollIntoView({
+            behavior: "smooth"
+        });
+    }
 }
 
 function scrollToBattle() {
