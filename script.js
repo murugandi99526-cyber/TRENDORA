@@ -472,3 +472,51 @@ displayTrends(trends);
 displayLiveTrends();
 
 animateCounter();
+/* Trend card bottom section */
+.trend-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.trend-views {
+    color: #aaa;
+    font-size: 13px;
+}
+
+/* Like and share buttons */
+.trend-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.like-btn,
+.share-btn {
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.06);
+    color: white;
+    padding: 8px 11px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.3s ease;
+}
+
+.like-btn:hover,
+.share-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.like-btn.liked {
+    background: rgba(255, 60, 100, 0.2);
+    border-color: #ff4f81;
+    color: #ff6b91;
+}
+
+.share-btn {
+    color: #8ab4ff;
+}
