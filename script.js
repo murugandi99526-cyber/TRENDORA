@@ -1,443 +1,652 @@
-/* =========================
-   TRENDORA MAIN JAVASCRIPT
-========================= */
+/* =====================================================
+   TRENDORA JAVASCRIPT
+===================================================== */
 
 
-/* Trending Topics */
+/* =====================================================
+   PRELOADER
+===================================================== */
 
-const trends = [
-    {
-        title: "Latest Movie Music",
-        description: "Discover the songs everyone is listening to.",
-        category: "music",
-        icon: "🎵"
-    },
-    {
-        title: "New Movie Releases",
-        description: "Explore the latest movies and upcoming releases.",
-        category: "movies",
-        icon: "🎬"
-    },
-    {
-        title: "AI and Technology",
-        description: "The latest developments in technology and AI.",
-        category: "technology",
-        icon: "💻"
-    },
-    {
-        title: "Popular Sports Updates",
-        description: "Catch up on exciting sports discussions.",
-        category: "sports",
-        icon: "⚽"
-    },
-    {
-        title: "Viral Internet Trends",
-        description: "See what is spreading across the internet.",
-        category: "viral",
-        icon: "🚀"
-    },
-    {
-        title: "Trending Entertainment",
-        description: "Popular entertainment news and discussions.",
-        category: "movies",
-        icon: "✨"
-    }
-];
+window.addEventListener("load", () => {
 
-let selectedCategory = "all";
-let searchText = "";
+    setTimeout(() => {
+
+        const loader =
+            document.getElementById("preloader");
+
+        if (loader) {
+            loader.classList.add("hide");
+        }
+
+    }, 1000);
+
+});
 
 
-/* Elements */
+/* =====================================================
+   MOBILE MENU
+===================================================== */
 
-const trendingGrid = document.getElementById("trendingGrid");
-const liveTrendingList = document.getElementById("liveTrendingList");
-const searchInput = document.getElementById("searchInput");
-const emptyState = document.getElementById("emptyState");
-const topicCount = document.getElementById("topicCount");
-const visitorCount = document.getElementById("visitorCount");
+function toggleMenu() {
 
+    const nav =
+        document.getElementById("navMenu");
 
-/* Display Trending Cards */
+    nav.classList.toggle("active");
 
-function displayTrends() {
-    if (!trendingGrid) return;
-
-    const filteredTrends = trends.filter(function (trend) {
-
-        const matchesCategory =
-            selectedCategory === "all" ||
-            trend.category === selectedCategory;
-
-        const matchesSearch =
-            trend.title.toLowerCase().includes(searchText) ||
-            trend.description.toLowerCase().includes(searchText);
-
-        return matchesCategory && matchesSearch;
-    });
-
-    trendingGrid.innerHTML = "";
-
-    filteredTrends.forEach(function (trend, index) {
-
-        const savedLikes =
-            Number(localStorage.getItem("like-" + trend.title)) || 0;
-
-        const card = document.createElement("article");
-        card.className = "trend-card";
-
-        card.innerHTML = `
-            <div class="trend-top">
-                <span class="trend-icon">${trend.icon}</span>
-                <span class="trend-rank">#${index + 1}</span>
-            </div>
-
-            <h3>${trend.title}</h3>
-
-            <p>${trend.description}</p>
-
-            <div class="trend-bottom">
-                <span class="trend-category">${trend.category}</span>
-
-                <div class="trend-actions">
-                    <button class="action-button"
-                        onclick="likeTrend('${trend.title.replace(/'/g, "\\'")}')">
-                        ❤️ ${savedLikes}
-                    </button>
-
-                    <button class="action-button"
-                        onclick="shareTrend('${trend.title.replace(/'/g, "\\'")}')">
-                        📤 Share
-                    </button>
-                </div>
-            </div>
-        `;
-
-        trendingGrid.appendChild(card);
-    });
-
-    if (emptyState) {
-        emptyState.style.display =
-            filteredTrends.length === 0 ? "block" : "none";
-    }
 }
 
 
-/* Live Trending List */
+/* Close mobile menu after clicking */
 
-function displayLiveTrends() {
-    if (!liveTrendingList) return;
+document.querySelectorAll("#navMenu a")
+.forEach(link => {
 
-    liveTrendingList.innerHTML = "";
+    link.addEventListener("click", () => {
 
-    trends.slice(0, 5).forEach(function (trend, index) {
+        document
+            .getElementById("navMenu")
+            .classList.remove("active");
 
-        const item = document.createElement("div");
-        item.className = "live-topic";
-
-        item.innerHTML = `
-            ${index + 1}. ${trend.icon} ${trend.title}
-        `;
-
-        liveTrendingList.appendChild(item);
-    });
-}
-
-
-/* Search */
-
-if (searchInput) {
-    searchInput.addEventListener("input", function () {
-        searchText = this.value.toLowerCase().trim();
-        displayTrends();
-    });
-}
-
-
-/* Category Filters */
-
-document.querySelectorAll(".filter-button").forEach(function (button) {
-
-    button.addEventListener("click", function () {
-
-        document.querySelectorAll(".filter-button").forEach(function (item) {
-            item.classList.remove("active");
-        });
-
-        this.classList.add("active");
-
-        selectedCategory =
-            this.getAttribute("data-category");
-
-        displayTrends();
     });
 
 });
 
 
-/* Like Trend */
+/* =====================================================
+   SMOOTH SCROLL
+===================================================== */
 
-function likeTrend(title) {
+function scrollToSection(id) {
 
-    const key = "like-" + title;
-    const currentLikes = Number(localStorage.getItem(key)) || 0;
+    const element =
+        document.getElementById(id);
 
-    localStorage.setItem(key, currentLikes + 1);
+    if (element) {
 
-    displayTrends();
+        element.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    }
+
 }
 
 
-/* Share Trend */
+/* =====================================================
+   MESSAGE
+===================================================== */
 
-function shareTrend(title) {
+let messageTimer;
 
-    const shareData = {
-        title: "Trendora",
-        text: "Check out this trending topic: " + title,
-        url: window.location.href
-    };
+function showMessage(text) {
 
-    if (navigator.share) {
-        navigator.share(shareData).catch(function () {});
+    const box =
+        document.getElementById("messageBox");
+
+    clearTimeout(messageTimer);
+
+    box.textContent = text;
+
+    box.classList.add("show");
+
+    messageTimer = setTimeout(() => {
+
+        box.classList.remove("show");
+
+    }, 2800);
+
+}
+
+
+/* =====================================================
+   YEAR
+===================================================== */
+
+document.getElementById("year").textContent =
+    new Date().getFullYear();
+
+
+/* =====================================================
+   VISITOR COUNTER
+===================================================== */
+
+/*
+   DEMO VERSION
+
+   localStorage counts visits on the current
+   browser/device.
+
+   It is NOT a global website counter.
+
+   For a real global counter, connect a database
+   such as Firebase or Supabase.
+*/
+
+let visitors =
+    Number(
+        localStorage.getItem("trendoraVisitors")
+    ) || 0;
+
+visitors++;
+
+localStorage.setItem(
+    "trendoraVisitors",
+    visitors
+);
+
+
+function updateVisitorDisplays() {
+
+    document.getElementById("visitorCount")
+        .textContent = formatNumber(visitors);
+
+    document.getElementById("heroVisitors")
+        .textContent = formatNumber(visitors);
+
+}
+
+
+function formatNumber(number) {
+
+    if (number >= 1000000) {
+        return (number / 1000000).toFixed(1) + "M";
+    }
+
+    if (number >= 1000) {
+        return (number / 1000).toFixed(1) + "K";
+    }
+
+    return number;
+}
+
+
+updateVisitorDisplays();
+
+
+/* =====================================================
+   LIVE VIEWERS
+===================================================== */
+
+/*
+   This is a visual demo.
+
+   It does not represent the actual number
+   of people on the website.
+
+   A real live viewer count requires a server.
+*/
+
+let onlineUsers =
+    Math.floor(Math.random() * 8) + 3;
+
+
+function updateOnlineDisplays() {
+
+    document.getElementById("liveCount")
+        .textContent = onlineUsers;
+
+    document.getElementById("headerOnline")
+        .textContent = onlineUsers;
+
+    document.getElementById("heroOnline")
+        .textContent = onlineUsers + " watching";
+
+    document.getElementById("heroOnline")
+        .textContent = onlineUsers + " watching";
+
+}
+
+
+updateOnlineDisplays();
+
+
+setInterval(() => {
+
+    const change =
+        Math.floor(Math.random() * 3) - 1;
+
+    onlineUsers += change;
+
+    if (onlineUsers < 1) {
+        onlineUsers = 1;
+    }
+
+    if (onlineUsers > 99) {
+        onlineUsers = 99;
+    }
+
+    updateOnlineDisplays();
+
+}, 5000);
+
+
+/* =====================================================
+   MUSIC DATABASE
+===================================================== */
+
+let musicLibrary =
+    JSON.parse(
+        localStorage.getItem("trendoraMusic")
+    ) || [];
+
+
+/* =====================================================
+   DISPLAY MUSIC
+===================================================== */
+
+function displayMusic(list = musicLibrary) {
+
+    const musicList =
+        document.getElementById("musicList");
+
+    musicList.innerHTML = "";
+
+
+    if (list.length === 0) {
+
+        musicList.innerHTML = `
+
+            <div class="music-item">
+
+                <div class="music-icon">
+                    🎵
+                </div>
+
+                <div class="music-details">
+
+                    <h3>
+                        No music available yet
+                    </h3>
+
+                    <p>
+                        The Trendora creator can upload
+                        music from the admin panel below.
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+        updateSongCount();
+
+        return;
+    }
+
+
+    list.forEach(song => {
+
+        const item =
+            document.createElement("div");
+
+        item.className = "music-item";
+
+
+        const icon =
+            document.createElement("div");
+
+        icon.className = "music-icon";
+
+        icon.textContent = "🎵";
+
+
+        const details =
+            document.createElement("div");
+
+        details.className = "music-details";
+
+
+        const title =
+            document.createElement("h3");
+
+        title.textContent = song.title;
+
+
+        const artist =
+            document.createElement("p");
+
+        artist.textContent =
+            song.artist;
+
+
+        details.appendChild(title);
+        details.appendChild(artist);
+
+
+        const audio =
+            document.createElement("audio");
+
+        audio.controls = true;
+
+        audio.src = song.url;
+
+
+        item.appendChild(icon);
+        item.appendChild(details);
+        item.appendChild(audio);
+
+
+        musicList.appendChild(item);
+
+    });
+
+
+    updateSongCount();
+
+}
+
+
+/* =====================================================
+   SONG COUNT
+===================================================== */
+
+function updateSongCount() {
+
+    const count =
+        musicLibrary.length;
+
+    document.getElementById("songCount")
+        .textContent = count;
+
+    document.getElementById("heroSongs")
+        .textContent = count;
+
+}
+
+
+/* =====================================================
+   MUSIC SEARCH
+===================================================== */
+
+function searchMusic() {
+
+    const input =
+        document.getElementById("musicSearch");
+
+    const search =
+        input.value
+            .toLowerCase()
+            .trim();
+
+
+    const filtered =
+        musicLibrary.filter(song => {
+
+            const title =
+                song.title.toLowerCase();
+
+            const artist =
+                song.artist.toLowerCase();
+
+            return (
+                title.includes(search) ||
+                artist.includes(search)
+            );
+
+        });
+
+
+    displayMusic(filtered);
+
+}
+
+
+/* =====================================================
+   ADMIN LOGIN
+===================================================== */
+
+/*
+   IMPORTANT SECURITY NOTE:
+
+   This password is visible in browser JavaScript.
+
+   It is ONLY suitable for a demo.
+
+   Do NOT use this method for a real private
+   administrator account.
+
+   For a real Trendora admin system,
+   use Firebase/Supabase authentication.
+*/
+
+const ADMIN_PASSWORD =
+    "Trendora123";
+
+
+function unlockAdmin() {
+
+    const password =
+        document.getElementById(
+            "adminPassword"
+        ).value;
+
+
+    if (password === ADMIN_PASSWORD) {
+
+        document
+            .getElementById("uploadArea")
+            .classList.remove("hidden");
+
+
+        showMessage(
+            "👑 Creator access unlocked!"
+        );
+
+
     } else {
-        navigator.clipboard.writeText(window.location.href);
 
-        alert("Trend link copied!");
+        showMessage(
+            "❌ Incorrect admin password"
+        );
+
     }
+
 }
 
 
-/* Trend Battle */
+/* =====================================================
+   MUSIC UPLOAD
+===================================================== */
 
-function getVotes() {
-    return {
-        A: Number(localStorage.getItem("battleA")) || 0,
-        B: Number(localStorage.getItem("battleB")) || 0
+function uploadMusic() {
+
+    const title =
+        document
+            .getElementById("songTitle")
+            .value
+            .trim();
+
+
+    const artist =
+        document
+            .getElementById("artistName")
+            .value
+            .trim();
+
+
+    const file =
+        document
+            .getElementById("musicFile")
+            .files[0];
+
+
+    if (!title) {
+
+        showMessage(
+            "Please enter the song or movie name."
+        );
+
+        return;
+    }
+
+
+    if (!artist) {
+
+        showMessage(
+            "Please enter the artist name."
+        );
+
+        return;
+    }
+
+
+    if (!file) {
+
+        showMessage(
+            "Please choose an audio file."
+        );
+
+        return;
+    }
+
+
+    if (!file.type.startsWith("audio/")) {
+
+        showMessage(
+            "Please select a valid audio file."
+        );
+
+        return;
+    }
+
+
+    /*
+       Temporary browser URL.
+
+       This lets the current browser play
+       the selected audio file.
+    */
+
+    const audioURL =
+        URL.createObjectURL(file);
+
+
+    const newSong = {
+
+        title: title,
+
+        artist: artist,
+
+        url: audioURL
+
     };
-}
-
-function updateVotes() {
-
-    const votes = getVotes();
-
-    const voteCountA = document.getElementById("voteCountA");
-    const voteCountB = document.getElementById("voteCountB");
-
-    if (voteCountA) {
-        voteCountA.textContent = votes.A + " votes";
-    }
-
-    if (voteCountB) {
-        voteCountB.textContent = votes.B + " votes";
-    }
-}
-
-function voteBattle(option) {
-
-    const key = option === "A" ? "battleA" : "battleB";
-    const currentVotes = Number(localStorage.getItem(key)) || 0;
-
-    localStorage.setItem(key, currentVotes + 1);
-
-    updateVotes();
-
-    alert("Your vote has been counted! ⚡");
-}
 
 
-/* Visitor Counter */
+    musicLibrary.push(newSong);
 
-async function loadVisitorCount() {
 
-    if (!visitorCount) return;
+    /*
+       Save metadata.
 
-    const counterURL =
-        "https://abacus.jasoncameron.dev/hit/trendora/total-visitors";
+       Browser-created Blob URLs are temporary,
+       so this is a demo/local system only.
+    */
 
     try {
-        const response = await fetch(counterURL);
 
-        if (!response.ok) {
-            throw new Error("Visitor counter request failed");
-        }
-
-        const data = await response.json();
-
-        if (data.value !== undefined) {
-            visitorCount.textContent =
-                Number(data.value).toLocaleString();
-        } else {
-            visitorCount.textContent = "0";
-        }
+        localStorage.setItem(
+            "trendoraMusic",
+            JSON.stringify(musicLibrary)
+        );
 
     } catch (error) {
-        console.log("Visitor counter unavailable:", error);
-        visitorCount.textContent = "—";
+
+        console.log(
+            "Could not save music metadata:",
+            error
+        );
+
     }
+
+
+    displayMusic();
+
+
+    document
+        .getElementById("songTitle")
+        .value = "";
+
+
+    document
+        .getElementById("artistName")
+        .value = "";
+
+
+    document
+        .getElementById("musicFile")
+        .value = "";
+
+
+    showMessage(
+        "🎵 Music added to Trendora!"
+    );
+
 }
 
 
-/* Topic Count Animation */
+/* =====================================================
+   ACTIVE NAVIGATION
+===================================================== */
 
-function animateTopicCount() {
+const sections =
+    document.querySelectorAll(
+        "main section[id]"
+    );
 
-    if (!topicCount) return;
 
-    let current = 0;
-    const target = trends.length;
+const navLinks =
+    document.querySelectorAll(
+        "#navMenu a"
+    );
 
-    const timer = setInterval(function () {
 
-        current++;
+window.addEventListener("scroll", () => {
 
-        topicCount.textContent = current;
+    let current = "home";
 
-        if (current >= target) {
-            clearInterval(timer);
+
+    sections.forEach(section => {
+
+        const sectionTop =
+            section.offsetTop - 120;
+
+        if (
+            window.scrollY >= sectionTop
+        ) {
+            current =
+                section.getAttribute("id");
         }
 
-    }, 100);
-}
-
-
-/* Navigation */
-
-function scrollToTrending() {
-
-    const section = document.getElementById("trending");
-
-    if (section) {
-        section.scrollIntoView({
-            behavior: "smooth"
-        });
-    }
-}
-
-function scrollToMusic() {
-
-    const section = document.getElementById("movieMusic");
-
-    if (section) {
-        section.scrollIntoView({
-            behavior: "smooth"
-        });
-    }
-}
-
-
-/* Mobile Menu */
-
-const menuButton = document.getElementById("menuButton");
-const navLinks = document.getElementById("navLinks");
-
-if (menuButton && navLinks) {
-
-    menuButton.addEventListener("click", function () {
-        navLinks.classList.toggle("active");
     });
 
-    document.querySelectorAll(".nav-links a").forEach(function (link) {
 
-        link.addEventListener("click", function () {
-            navLinks.classList.remove("active");
-        });
+    navLinks.forEach(link => {
 
-    });
-}
+        link.classList.remove("active");
 
 
-/* Movie Music Search */
-
-const musicSearchInput =
-    document.getElementById("musicSearchInput");
-
-const musicCards =
-    document.querySelectorAll(".music-card");
-
-if (musicSearchInput) {
-
-    musicSearchInput.addEventListener("input", function () {
-
-        const text = this.value.toLowerCase().trim();
-
-        musicCards.forEach(function (card) {
-
-            const cardText =
-                card.textContent.toLowerCase();
-
-            card.style.display =
-                cardText.includes(text) ? "flex" : "none";
-        });
-
-    });
-}
+        const href =
+            link.getAttribute("href");
 
 
-/* Movie Music Filters */
+        if (href === "#" + current) {
 
-document.querySelectorAll(".music-filter").forEach(function (button) {
+            link.classList.add("active");
 
-    button.addEventListener("click", function () {
-
-        document.querySelectorAll(".music-filter").forEach(function (item) {
-            item.classList.remove("active");
-        });
-
-        this.classList.add("active");
-
-        const category =
-            this.getAttribute("data-music-category");
-
-        musicCards.forEach(function (card) {
-
-            const cardCategory =
-                card.getAttribute("data-music-category");
-
-            card.style.display =
-                category === "all" || category === cardCategory
-                    ? "flex"
-                    : "none";
-        });
+        }
 
     });
 
 });
 
 
-/* Back to Top */
+/* =====================================================
+   INITIALIZE
+===================================================== */
 
-const backToTop =
-    document.getElementById("backToTop");
+displayMusic();
 
-window.addEventListener("scroll", function () {
-
-    if (window.scrollY > 400) {
-        backToTop.classList.add("show");
-    } else {
-        backToTop.classList.remove("show");
-    }
-
-});
-
-if (backToTop) {
-
-    backToTop.addEventListener("click", function () {
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-
-    });
-
-}
-
-
-/* Initialize */
-
-displayTrends();
-displayLiveTrends();
-updateVotes();
-animateTopicCount();
-loadVisitorCount();
+updateSongCount();
