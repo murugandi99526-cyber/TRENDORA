@@ -328,21 +328,76 @@ body::after {
     font-weight: bold;
 }
 
+/* LIKE AND SHARE BUTTONS */
+
 .card-buttons {
     display: flex;
+    align-items: center;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 22px;
 }
 
 .like-button,
 .share-button {
-    padding: 10px 15px;
-    border-radius: 20px;
-    border: 1px solid #334155;
-    background: #172033;
-    color: #cbd5e1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 40px;
+    padding: 9px 15px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.25s ease;
+}
+
+/* Like button */
+
+.like-button {
+    background: rgba(236, 72, 153, 0.08);
+    border: 1px solid rgba(236, 72, 153, 0.3);
+    color: #f9a8d4;
+}
+
+.like-button:hover {
+    background: rgba(236, 72, 153, 0.18);
+    border-color: #ec4899;
+    transform: translateY(-2px);
+}
+
+.like-button.liked {
+    background: #ec4899;
+    border-color: #ec4899;
+    color: white;
+}
+
+/* Share button */
+
+.share-button {
+    background: rgba(34, 211, 238, 0.08);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    color: #67e8f9;
+}
+
+.share-button:hover {
+    background: rgba(34, 211, 238, 0.18);
+    border-color: #22d3ee;
+    transform: translateY(-2px);
+}
+
+/* Mobile adjustment */
+
+@media (max-width: 400px) {
+    .card-buttons {
+        gap: 8px;
+    }
+
+    .like-button,
+    .share-button {
+        padding: 9px 12px;
+        font-size: 12px;
+    }
 }
 
 .like-button:hover {
