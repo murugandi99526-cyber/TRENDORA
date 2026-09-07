@@ -110,6 +110,7 @@ const liveTrendingGrid = document.getElementById("liveTrendingGrid");
 const searchInput = document.getElementById("searchInput");
 const emptyMessage = document.getElementById("emptyMessage");
 const topicCount = document.getElementById("topicCount");
+const visitorCount = document.getElementById("visitorCount");
 
 let currentCategory = "all";
 
@@ -131,7 +132,8 @@ function displayTrends(data) {
 
     data.forEach((trend, index) => {
 
-        const liked = localStorage.getItem(`liked-${trend.id}`) === "true";
+        const liked =
+            localStorage.getItem(`liked-${trend.id}`) === "true";
 
         const card = document.createElement("article");
 
@@ -227,23 +229,7 @@ function filterTrends(category, clickedButton) {
 
     clickedButton.classList.add("active");
 
-    const searchText = searchInput.value.toLowerCase().trim();
-
-    let filteredTrends = trends.filter((trend) => {
-
-        const matchesCategory =
-            category === "all" || trend.category === category;
-
-        const matchesSearch =
-            trend.title.toLowerCase().includes(searchText) ||
-            trend.description.toLowerCase().includes(searchText) ||
-            trend.category.toLowerCase().includes(searchText);
-
-        return matchesCategory && matchesSearch;
-
-    });
-
-    displayTrends(filteredTrends);
+    searchTrends();
 
 }
 
@@ -282,7 +268,8 @@ function searchTrends() {
 
 function likeTrend(id, button) {
 
-    const isLiked = localStorage.getItem(`liked-${id}`) === "true";
+    const isLiked =
+        localStorage.getItem(`liked-${id}`) === "true";
 
     if (isLiked) {
 
@@ -346,6 +333,7 @@ async function shareTrend(title) {
         } catch (error) {
 
             showToast("Copy failed", "!");
+
         }
 
     }
@@ -357,15 +345,21 @@ async function shareTrend(title) {
    TREND BATTLE
 ========================= */
 
-let voteOne = Number(localStorage.getItem("voteOne")) || 50;
-let voteTwo = Number(localStorage.getItem("voteTwo")) || 50;
+let voteOne =
+    Number(localStorage.getItem("voteOne")) || 50;
+
+let voteTwo =
+    Number(localStorage.getItem("voteTwo")) || 50;
 
 function updateVotes() {
 
     const total = voteOne + voteTwo;
 
-    const firstPercentage = Math.round((voteOne / total) * 100);
-    const secondPercentage = 100 - firstPercentage;
+    const firstPercentage =
+        Math.round((voteOne / total) * 100);
+
+    const secondPercentage =
+        100 - firstPercentage;
 
     document.getElementById("voteOneBar").style.width =
         `${firstPercentage}%`;
@@ -384,15 +378,23 @@ function updateVotes() {
 function voteTrend(number) {
 
     if (number === 1) {
+
         voteOne++;
+
         localStorage.setItem("voteOne", voteOne);
+
         showToast("You voted for Aasa Kooda", "🎵");
+
     }
 
     if (number === 2) {
+
         voteTwo++;
+
         localStorage.setItem("voteTwo", voteTwo);
+
         showToast("You voted for Latest Movie", "🎬");
+
     }
 
     updateVotes();
@@ -406,7 +408,8 @@ function voteTrend(number) {
 
 function scrollToTrending() {
 
-    const trendingSection = document.getElementById("trending");
+    const trendingSection =
+        document.getElementById("trending");
 
     if (trendingSection) {
 
@@ -420,7 +423,8 @@ function scrollToTrending() {
 
 function scrollToBattle() {
 
-    const battleSection = document.getElementById("battle");
+    const battleSection =
+        document.getElementById("battle");
 
     if (battleSection) {
 
@@ -439,7 +443,8 @@ function scrollToBattle() {
 
 function toggleMenu() {
 
-    const mobileMenu = document.getElementById("mobileMenu");
+    const mobileMenu =
+        document.getElementById("mobileMenu");
 
     mobileMenu.classList.toggle("show");
 
@@ -447,7 +452,8 @@ function toggleMenu() {
 
 function closeMenu() {
 
-    const mobileMenu = document.getElementById("mobileMenu");
+    const mobileMenu =
+        document.getElementById("mobileMenu");
 
     mobileMenu.classList.remove("show");
 
@@ -455,7 +461,7 @@ function closeMenu() {
 
 
 /* =========================
-   TOAST
+   TOAST MESSAGE
 ========================= */
 
 let toastTimeout;
@@ -505,10 +511,67 @@ function animateTopicCount() {
 
 
 /* =========================
+   TOTAL VISITOR COUNTER
+========================= */
+
+/*
+    This counter increases whenever someone opens
+    your website.
+
+    The counter is shared by all visitors.
+*/
+
+async function loadVisitorCount() {
+
+    if (!visitorCount) {
+        return;
+    }
+
+    const counterURL =
+        "https://abacus.jasoncameron.dev/hit/trendora/total-visitors";
+
+    try {
+
+        const response = await fetch(counterURL);
+
+        if (!response.ok) {
+            throw new Error("Visitor counter request failed");
+        }
+
+        const data = await response.json();
+
+        if (data.value !== undefined) {
+
+            visitorCount.textContent =
+                Number(data.value).toLocaleString();
+
+        } else {
+
+            visitorCount.textContent = "0";
+
+        }
+
+    } catch (error) {
+
+        console.log("Visitor counter unavailable:", error);
+
+        visitorCount.textContent = "—";
+
+    }
+
+}
+
+
+/* =========================
    INITIALIZE WEBSITE
 ========================= */
 
 displayTrends(trends);
+
 displayLiveTrends();
+
 updateVotes();
+
 animateTopicCount();
+
+loadVisitorCount();
