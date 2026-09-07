@@ -181,34 +181,54 @@ function displayTrends(data) {
    DISPLAY LIVE TRENDS
 ========================= */
 
-function displayLiveTrends() {
+function displayTrends(trends) {
+    const trendGrid = document.getElementById("trendGrid");
 
-    liveTrendingGrid.innerHTML = "";
+    if (!trendGrid) return;
 
-    liveTrends.forEach(trend => {
+    trendGrid.innerHTML = "";
 
+    trends.forEach((trend, index) => {
         const card = document.createElement("div");
-
-        card.className = "live-card";
+        card.className = "trend-card";
 
         card.innerHTML = `
-            <div class="live-number">#${trend.number}</div>
+            <div class="trend-image">
+                <img src="${trend.image}" alt="${trend.title}">
+                <span class="trend-category">${trend.category}</span>
+            </div>
 
-            <h3>${trend.title}</h3>
+            <div class="trend-content">
+                <h3>${trend.title}</h3>
+                <p>${trend.description}</p>
 
-            <p>${trend.description}</p>
+                <div class="trend-card-bottom">
+                    <span class="trend-views">
+                        👁️ ${trend.views || "1K"} views
+                    </span>
 
-            <div class="trend-up">
-                📈 ${trend.growth} rising
+                    <div class="trend-actions">
+                        <button 
+                            class="like-btn"
+                            onclick="likeTrend(${index}, this)"
+                            aria-label="Like this trend">
+                            ❤️ <span>${trend.likes || 0}</span>
+                        </button>
+
+                        <button 
+                            class="share-btn"
+                            onclick="shareTrend('${trend.title.replace(/'/g, "\\'")}')"
+                            aria-label="Share this trend">
+                            🔗 Share
+                        </button>
+                    </div>
+                </div>
             </div>
         `;
 
-        liveTrendingGrid.appendChild(card);
-
+        trendGrid.appendChild(card);
     });
-
-}
-
+                               }
 
 /* =========================
    CATEGORY FILTER
