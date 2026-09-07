@@ -1,537 +1,261 @@
 /* =========================
-   TREND DATA
+   TRENDORA MAIN JAVASCRIPT
 ========================= */
+
+
+/* Trending Topics */
 
 const trends = [
     {
-        id: 1,
-        title: "Aasa Kooda",
-        description: "A popular music trend taking over everyone's playlist.",
+        title: "Latest Movie Music",
+        description: "Discover the songs everyone is listening to.",
         category: "music",
-        emoji: "🎵",
-        growth: "+92%"
+        icon: "🎵"
     },
     {
-        id: 2,
-        title: "Latest Movie",
-        description: "The movie everyone is discussing and recommending.",
+        title: "New Movie Releases",
+        description: "Explore the latest movies and upcoming releases.",
         category: "movies",
-        emoji: "🎬",
-        growth: "+84%"
+        icon: "🎬"
     },
     {
-        id: 3,
-        title: "Gaming Updates",
-        description: "New gaming moments, updates and exciting releases.",
-        category: "gaming",
-        emoji: "🎮",
-        growth: "+76%"
-    },
-    {
-        id: 4,
-        title: "AI Robotics",
-        description: "The future of artificial intelligence and robotics.",
+        title: "AI and Technology",
+        description: "The latest developments in technology and AI.",
         category: "technology",
-        emoji: "🤖",
-        growth: "+88%"
+        icon: "💻"
     },
     {
-        id: 5,
-        title: "Streetwear Style",
-        description: "Fresh fashion ideas and creative outfit inspiration.",
-        category: "style",
-        emoji: "👟",
-        growth: "+67%"
+        title: "Popular Sports Updates",
+        description: "Catch up on exciting sports discussions.",
+        category: "sports",
+        icon: "⚽"
     },
     {
-        id: 6,
-        title: "Viral Challenge",
-        description: "A new internet moment that everyone is sharing.",
+        title: "Viral Internet Trends",
+        description: "See what is spreading across the internet.",
         category: "viral",
-        emoji: "🚀",
-        growth: "+95%"
+        icon: "🚀"
     },
     {
-        id: 7,
-        title: "Future Gadgets",
-        description: "Cool gadgets and inventions changing everyday life.",
-        category: "technology",
-        emoji: "📱",
-        growth: "+72%"
-    },
-    {
-        id: 8,
-        title: "New Music Drop",
-        description: "Fresh songs and artists gaining attention online.",
-        category: "music",
-        emoji: "🎧",
-        growth: "+81%"
-    },
-    {
-        id: 9,
-        title: "Anime World",
-        description: "Popular anime characters, stories and fan moments.",
+        title: "Trending Entertainment",
+        description: "Popular entertainment news and discussions.",
         category: "movies",
-        emoji: "🌸",
-        growth: "+79%"
+        icon: "✨"
     }
 ];
 
-const liveTrends = [
-    {
-        title: "Music Buzz",
-        description: "The latest songs people are playing repeatedly.",
-        emoji: "🎧"
-    },
-    {
-        title: "Movie Talk",
-        description: "New releases and fan discussions are rising.",
-        emoji: "🍿"
-    },
-    {
-        title: "Gaming Zone",
-        description: "Gamers are sharing new clips and updates.",
-        emoji: "🕹️"
-    },
-    {
-        title: "Tech Future",
-        description: "AI and futuristic inventions are going viral.",
-        emoji: "⚡"
-    }
-];
+let selectedCategory = "all";
+let searchText = "";
 
 
-/* =========================
-   DOM ELEMENTS
-========================= */
+/* Elements */
 
-const trendGrid = document.getElementById("trendGrid");
-const liveTrendingGrid = document.getElementById("liveTrendingGrid");
+const trendingGrid = document.getElementById("trendingGrid");
+const liveTrendingList = document.getElementById("liveTrendingList");
 const searchInput = document.getElementById("searchInput");
-const emptyMessage = document.getElementById("emptyMessage");
+const emptyState = document.getElementById("emptyState");
 const topicCount = document.getElementById("topicCount");
 const visitorCount = document.getElementById("visitorCount");
 
-let currentCategory = "all";
 
+/* Display Trending Cards */
 
-/* =========================
-   DISPLAY TRENDING CARDS
-========================= */
+function displayTrends() {
+    if (!trendingGrid) return;
 
-function displayTrends(data) {
-
-    trendGrid.innerHTML = "";
-
-    if (data.length === 0) {
-        emptyMessage.style.display = "block";
-        return;
-    }
-
-    emptyMessage.style.display = "none";
-
-    data.forEach((trend, index) => {
-
-        const liked =
-            localStorage.getItem(`liked-${trend.id}`) === "true";
-
-        const card = document.createElement("article");
-
-        card.className = "trend-card";
-
-        card.innerHTML = `
-            <div class="trend-card-top">
-                <span class="trend-emoji">${trend.emoji}</span>
-                <span class="trend-rank">#${index + 1} TREND</span>
-            </div>
-
-            <h3>${trend.title}</h3>
-
-            <p>${trend.description}</p>
-
-            <span class="trend-category">${trend.category}</span>
-
-            <div class="trend-growth">
-                ↗ ${trend.growth} this week
-            </div>
-
-            <div class="trend-actions">
-
-                <button
-                    class="like-button ${liked ? "liked" : ""}"
-                    onclick="likeTrend(${trend.id}, this)"
-                >
-                    ${liked ? "♥ Liked" : "♡ Like"}
-                </button>
-
-                <button
-                    class="share-button"
-                    onclick="shareTrend('${trend.title.replace(/'/g, "\\'")}')"
-                >
-                    ↗ Share
-                </button>
-
-            </div>
-        `;
-
-        trendGrid.appendChild(card);
-
-    });
-
-}
-
-
-/* =========================
-   DISPLAY LIVE CARDS
-========================= */
-
-function displayLiveTrends() {
-
-    liveTrendingGrid.innerHTML = "";
-
-    liveTrends.forEach((trend) => {
-
-        const card = document.createElement("article");
-
-        card.className = "live-card";
-
-        card.innerHTML = `
-            <div class="trend-emoji">${trend.emoji}</div>
-
-            <h3>${trend.title}</h3>
-
-            <p>${trend.description}</p>
-
-            <span class="live-tag">
-                <span class="live-dot"></span>
-                LIVE TRENDING
-            </span>
-        `;
-
-        liveTrendingGrid.appendChild(card);
-
-    });
-
-}
-
-
-/* =========================
-   FILTER TRENDS
-========================= */
-
-function filterTrends(category, clickedButton) {
-
-    currentCategory = category;
-
-    document.querySelectorAll(".category-button").forEach((button) => {
-        button.classList.remove("active");
-    });
-
-    clickedButton.classList.add("active");
-
-    searchTrends();
-
-}
-
-
-/* =========================
-   SEARCH
-========================= */
-
-function searchTrends() {
-
-    const searchText = searchInput.value.toLowerCase().trim();
-
-    const filteredTrends = trends.filter((trend) => {
+    const filteredTrends = trends.filter(function (trend) {
 
         const matchesCategory =
-            currentCategory === "all" ||
-            trend.category === currentCategory;
+            selectedCategory === "all" ||
+            trend.category === selectedCategory;
 
         const matchesSearch =
             trend.title.toLowerCase().includes(searchText) ||
-            trend.description.toLowerCase().includes(searchText) ||
-            trend.category.toLowerCase().includes(searchText);
+            trend.description.toLowerCase().includes(searchText);
 
         return matchesCategory && matchesSearch;
-
     });
 
-    displayTrends(filteredTrends);
+    trendingGrid.innerHTML = "";
 
-}
+    filteredTrends.forEach(function (trend, index) {
 
+        const savedLikes =
+            Number(localStorage.getItem("like-" + trend.title)) || 0;
 
-/* =========================
-   LIKE BUTTON
-========================= */
+        const card = document.createElement("article");
+        card.className = "trend-card";
 
-function likeTrend(id, button) {
+        card.innerHTML = `
+            <div class="trend-top">
+                <span class="trend-icon">${trend.icon}</span>
+                <span class="trend-rank">#${index + 1}</span>
+            </div>
 
-    const isLiked =
-        localStorage.getItem(`liked-${id}`) === "true";
+            <h3>${trend.title}</h3>
 
-    if (isLiked) {
+            <p>${trend.description}</p>
 
-        localStorage.setItem(`liked-${id}`, "false");
+            <div class="trend-bottom">
+                <span class="trend-category">${trend.category}</span>
 
-        button.classList.remove("liked");
-        button.innerHTML = "♡ Like";
+                <div class="trend-actions">
+                    <button class="action-button"
+                        onclick="likeTrend('${trend.title.replace(/'/g, "\\'")}')">
+                        ❤️ ${savedLikes}
+                    </button>
 
-        showToast("Like removed", "♡");
+                    <button class="action-button"
+                        onclick="shareTrend('${trend.title.replace(/'/g, "\\'")}')">
+                        📤 Share
+                    </button>
+                </div>
+            </div>
+        `;
 
-    } else {
+        trendingGrid.appendChild(card);
+    });
 
-        localStorage.setItem(`liked-${id}`, "true");
-
-        button.classList.add("liked");
-        button.innerHTML = "♥ Liked";
-
-        showToast("Added to your favourites", "♥");
-
+    if (emptyState) {
+        emptyState.style.display =
+            filteredTrends.length === 0 ? "block" : "none";
     }
-
 }
 
 
-/* =========================
-   SHARE BUTTON
-========================= */
+/* Live Trending List */
 
-async function shareTrend(title) {
+function displayLiveTrends() {
+    if (!liveTrendingList) return;
 
-    const shareText = `Check out "${title}" on Trendora!`;
+    liveTrendingList.innerHTML = "";
+
+    trends.slice(0, 5).forEach(function (trend, index) {
+
+        const item = document.createElement("div");
+        item.className = "live-topic";
+
+        item.innerHTML = `
+            ${index + 1}. ${trend.icon} ${trend.title}
+        `;
+
+        liveTrendingList.appendChild(item);
+    });
+}
+
+
+/* Search */
+
+if (searchInput) {
+    searchInput.addEventListener("input", function () {
+        searchText = this.value.toLowerCase().trim();
+        displayTrends();
+    });
+}
+
+
+/* Category Filters */
+
+document.querySelectorAll(".filter-button").forEach(function (button) {
+
+    button.addEventListener("click", function () {
+
+        document.querySelectorAll(".filter-button").forEach(function (item) {
+            item.classList.remove("active");
+        });
+
+        this.classList.add("active");
+
+        selectedCategory =
+            this.getAttribute("data-category");
+
+        displayTrends();
+    });
+
+});
+
+
+/* Like Trend */
+
+function likeTrend(title) {
+
+    const key = "like-" + title;
+    const currentLikes = Number(localStorage.getItem(key)) || 0;
+
+    localStorage.setItem(key, currentLikes + 1);
+
+    displayTrends();
+}
+
+
+/* Share Trend */
+
+function shareTrend(title) {
+
+    const shareData = {
+        title: "Trendora",
+        text: "Check out this trending topic: " + title,
+        url: window.location.href
+    };
 
     if (navigator.share) {
-
-        try {
-
-            await navigator.share({
-                title: "Trendora",
-                text: shareText,
-                url: window.location.href
-            });
-
-            showToast("Shared successfully", "↗");
-
-        } catch (error) {
-
-            console.log("Share cancelled");
-
-        }
-
+        navigator.share(shareData).catch(function () {});
     } else {
+        navigator.clipboard.writeText(window.location.href);
 
-        try {
-
-            await navigator.clipboard.writeText(
-                `${shareText} ${window.location.href}`
-            );
-
-            showToast("Link copied to clipboard", "✓");
-
-        } catch (error) {
-
-            showToast("Copy failed", "!");
-
-        }
-
+        alert("Trend link copied!");
     }
-
 }
 
 
-/* =========================
-   TREND BATTLE
-========================= */
+/* Trend Battle */
 
-let voteOne =
-    Number(localStorage.getItem("voteOne")) || 50;
-
-let voteTwo =
-    Number(localStorage.getItem("voteTwo")) || 50;
+function getVotes() {
+    return {
+        A: Number(localStorage.getItem("battleA")) || 0,
+        B: Number(localStorage.getItem("battleB")) || 0
+    };
+}
 
 function updateVotes() {
 
-    const total = voteOne + voteTwo;
+    const votes = getVotes();
 
-    const firstPercentage =
-        Math.round((voteOne / total) * 100);
+    const voteCountA = document.getElementById("voteCountA");
+    const voteCountB = document.getElementById("voteCountB");
 
-    const secondPercentage =
-        100 - firstPercentage;
+    if (voteCountA) {
+        voteCountA.textContent = votes.A + " votes";
+    }
 
-    document.getElementById("voteOneBar").style.width =
-        `${firstPercentage}%`;
-
-    document.getElementById("voteTwoBar").style.width =
-        `${secondPercentage}%`;
-
-    document.getElementById("voteOneText").textContent =
-        `${firstPercentage}%`;
-
-    document.getElementById("voteTwoText").textContent =
-        `${secondPercentage}%`;
-
+    if (voteCountB) {
+        voteCountB.textContent = votes.B + " votes";
+    }
 }
 
-function voteTrend(number) {
+function voteBattle(option) {
 
-    if (number === 1) {
+    const key = option === "A" ? "battleA" : "battleB";
+    const currentVotes = Number(localStorage.getItem(key)) || 0;
 
-        voteOne++;
-
-        localStorage.setItem("voteOne", voteOne);
-
-        showToast("You voted for Aasa Kooda", "🎵");
-
-    }
-
-    if (number === 2) {
-
-        voteTwo++;
-
-        localStorage.setItem("voteTwo", voteTwo);
-
-        showToast("You voted for Latest Movie", "🎬");
-
-    }
+    localStorage.setItem(key, currentVotes + 1);
 
     updateVotes();
 
+    alert("Your vote has been counted! ⚡");
 }
 
 
-/* =========================
-   NAVIGATION
-========================= */
-
-function scrollToTrending() {
-
-    const trendingSection =
-        document.getElementById("trending");
-
-    if (trendingSection) {
-
-        trendingSection.scrollIntoView({
-            behavior: "smooth"
-        });
-
-    }
-
-}
-
-function scrollToBattle() {
-
-    const battleSection =
-        document.getElementById("battle");
-
-    if (battleSection) {
-
-        battleSection.scrollIntoView({
-            behavior: "smooth"
-        });
-
-    }
-
-}
-
-
-/* =========================
-   MOBILE MENU
-========================= */
-
-function toggleMenu() {
-
-    const mobileMenu =
-        document.getElementById("mobileMenu");
-
-    mobileMenu.classList.toggle("show");
-
-}
-
-function closeMenu() {
-
-    const mobileMenu =
-        document.getElementById("mobileMenu");
-
-    mobileMenu.classList.remove("show");
-
-}
-
-
-/* =========================
-   TOAST MESSAGE
-========================= */
-
-let toastTimeout;
-
-function showToast(message, icon = "✓") {
-
-    const toast = document.getElementById("toast");
-    const toastMessage = document.getElementById("toastMessage");
-    const toastIcon = document.getElementById("toastIcon");
-
-    toastMessage.textContent = message;
-    toastIcon.textContent = icon;
-
-    toast.classList.add("show");
-
-    clearTimeout(toastTimeout);
-
-    toastTimeout = setTimeout(() => {
-        toast.classList.remove("show");
-    }, 2500);
-
-}
-
-
-/* =========================
-   ANIMATED TOPIC COUNTER
-========================= */
-
-function animateTopicCount() {
-
-    let current = 0;
-    const target = trends.length;
-
-    const interval = setInterval(() => {
-
-        current++;
-
-        topicCount.textContent = current;
-
-        if (current >= target) {
-            clearInterval(interval);
-        }
-
-    }, 100);
-
-}
-
-
-/* =========================
-   TOTAL VISITOR COUNTER
-========================= */
-
-/*
-    This counter increases whenever someone opens
-    your website.
-
-    The counter is shared by all visitors.
-*/
+/* Visitor Counter */
 
 async function loadVisitorCount() {
 
-    if (!visitorCount) {
-        return;
-    }
+    if (!visitorCount) return;
 
     const counterURL =
         "https://abacus.jasoncameron.dev/hit/trendora/total-visitors";
 
     try {
-
         const response = await fetch(counterURL);
 
         if (!response.ok) {
@@ -541,37 +265,179 @@ async function loadVisitorCount() {
         const data = await response.json();
 
         if (data.value !== undefined) {
-
             visitorCount.textContent =
                 Number(data.value).toLocaleString();
-
         } else {
-
             visitorCount.textContent = "0";
-
         }
 
     } catch (error) {
-
         console.log("Visitor counter unavailable:", error);
-
         visitorCount.textContent = "—";
-
     }
+}
+
+
+/* Topic Count Animation */
+
+function animateTopicCount() {
+
+    if (!topicCount) return;
+
+    let current = 0;
+    const target = trends.length;
+
+    const timer = setInterval(function () {
+
+        current++;
+
+        topicCount.textContent = current;
+
+        if (current >= target) {
+            clearInterval(timer);
+        }
+
+    }, 100);
+}
+
+
+/* Navigation */
+
+function scrollToTrending() {
+
+    const section = document.getElementById("trending");
+
+    if (section) {
+        section.scrollIntoView({
+            behavior: "smooth"
+        });
+    }
+}
+
+function scrollToMusic() {
+
+    const section = document.getElementById("movieMusic");
+
+    if (section) {
+        section.scrollIntoView({
+            behavior: "smooth"
+        });
+    }
+}
+
+
+/* Mobile Menu */
+
+const menuButton = document.getElementById("menuButton");
+const navLinks = document.getElementById("navLinks");
+
+if (menuButton && navLinks) {
+
+    menuButton.addEventListener("click", function () {
+        navLinks.classList.toggle("active");
+    });
+
+    document.querySelectorAll(".nav-links a").forEach(function (link) {
+
+        link.addEventListener("click", function () {
+            navLinks.classList.remove("active");
+        });
+
+    });
+}
+
+
+/* Movie Music Search */
+
+const musicSearchInput =
+    document.getElementById("musicSearchInput");
+
+const musicCards =
+    document.querySelectorAll(".music-card");
+
+if (musicSearchInput) {
+
+    musicSearchInput.addEventListener("input", function () {
+
+        const text = this.value.toLowerCase().trim();
+
+        musicCards.forEach(function (card) {
+
+            const cardText =
+                card.textContent.toLowerCase();
+
+            card.style.display =
+                cardText.includes(text) ? "flex" : "none";
+        });
+
+    });
+}
+
+
+/* Movie Music Filters */
+
+document.querySelectorAll(".music-filter").forEach(function (button) {
+
+    button.addEventListener("click", function () {
+
+        document.querySelectorAll(".music-filter").forEach(function (item) {
+            item.classList.remove("active");
+        });
+
+        this.classList.add("active");
+
+        const category =
+            this.getAttribute("data-music-category");
+
+        musicCards.forEach(function (card) {
+
+            const cardCategory =
+                card.getAttribute("data-music-category");
+
+            card.style.display =
+                category === "all" || category === cardCategory
+                    ? "flex"
+                    : "none";
+        });
+
+    });
+
+});
+
+
+/* Back to Top */
+
+const backToTop =
+    document.getElementById("backToTop");
+
+window.addEventListener("scroll", function () {
+
+    if (window.scrollY > 400) {
+        backToTop.classList.add("show");
+    } else {
+        backToTop.classList.remove("show");
+    }
+
+});
+
+if (backToTop) {
+
+    backToTop.addEventListener("click", function () {
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    });
 
 }
 
 
-/* =========================
-   INITIALIZE WEBSITE
-========================= */
+/* Initialize */
 
-displayTrends(trends);
-
+displayTrends();
 displayLiveTrends();
-
 updateVotes();
-
 animateTopicCount();
-
 loadVisitorCount();
