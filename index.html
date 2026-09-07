@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -24,7 +24,7 @@
     <header class="navbar">
         <div class="nav-container">
 
-            <a href="#" class="brand">
+            <a href="#home" class="brand">
                 <img src="logo.png" alt="Trendora Logo">
                 <span>Trendora</span>
             </a>
@@ -80,6 +80,7 @@
                 </p>
 
                 <div class="hero-buttons">
+
                     <button class="primary-button" onclick="scrollToTrending()">
                         Explore Trends
                         <span>→</span>
@@ -88,8 +89,10 @@
                     <button class="secondary-button" onclick="scrollToBattle()">
                         ⚡ Trend Battle
                     </button>
+
                 </div>
 
+                <!-- WEBSITE STATISTICS -->
                 <div class="hero-stats">
 
                     <div class="stat-box">
@@ -98,19 +101,20 @@
                     </div>
 
                     <div class="stat-box">
-                        <strong>24/7</strong>
-                        <span>Fresh Updates</span>
+                        <strong id="visitorCount">...</strong>
+                        <span>Total Visitors</span>
                     </div>
 
                     <div class="stat-box">
-                        <strong>100%</strong>
-                        <span>Youth Powered</span>
+                        <strong>24/7</strong>
+                        <span>Fresh Updates</span>
                     </div>
 
                 </div>
 
             </div>
 
+            <!-- PHONE PREVIEW -->
             <div class="hero-visual">
 
                 <div class="floating-card card-top">
@@ -233,7 +237,7 @@
 
         </section>
 
-        <!-- TRENDING SECTION -->
+        <!-- TRENDING -->
         <section class="content-section" id="trending">
 
             <div class="section-heading">
@@ -366,7 +370,7 @@
 
         </section>
 
-        <!-- WHY TRENDORA -->
+        <!-- ABOUT -->
         <section class="content-section about-section" id="about">
 
             <div class="about-content">
@@ -432,7 +436,7 @@
 
             <div class="footer-brand">
 
-                <a href="#" class="brand">
+                <a href="#home" class="brand">
                     <img src="logo.png" alt="Trendora Logo">
                     <span>Trendora</span>
                 </a>
@@ -459,7 +463,7 @@
 
     </footer>
 
-    <!-- TOAST MESSAGE -->
+    <!-- TOAST -->
     <div class="toast" id="toast">
         <span id="toastIcon">✓</span>
         <span id="toastMessage">Done!</span>
