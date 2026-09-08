@@ -1,17 +1,39 @@
 /* =====================================================
-   TRENDORA V2
-   Main JavaScript
-===================================================== */
+   TRENDORA - SUPABASE PUBLIC UPLOAD SYSTEM
+   ===================================================== */
 
+// -----------------------------------------------------
+// 1. SUPABASE CONNECTION
+// -----------------------------------------------------
 
-/* ================= LOADER ================= */
+const SUPABASE_URL =
+    "https://sazjxdkhiewqeakzvgma.supabase.co";
+
+const SUPABASE_KEY =
+    "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+const STORAGE_BUCKET = "uploads";
+
+// -----------------------------------------------------
+// 2. GLOBAL VARIABLES
+// -----------------------------------------------------
+
+let allMusic = [];
+let allMovies = [];
+let selectedFile = null;
+
+// -----------------------------------------------------
+// 3. PAGE LOADER
+// -----------------------------------------------------
 
 window.addEventListener("load", () => {
-
-    const loader =
-        document.getElementById("loaderScreen");
-
     setTimeout(() => {
+        const loader = document.getElementById("loader");
 
         loader.style.opacity = "0";
 
@@ -20,1178 +42,676 @@ window.addEventListener("load", () => {
         }, 500);
 
     }, 700);
-
 });
 
+// -----------------------------------------------------
+// 4. CURRENT YEAR
+// -----------------------------------------------------
 
-/* ================= MOBILE MENU ================= */
+document.getElementById("currentYear").textContent =
+    new Date().getFullYear();
 
-const menuButton =
-    document.getElementById("menuButton");
+// -----------------------------------------------------
+// 5. MOBILE MENU
+// -----------------------------------------------------
 
-const mainNav =
-    document.getElementById("mainNav");
+const menuButton = document.getElementById("menuButton");
+const navigation = document.getElementById("navigation");
 
 menuButton.addEventListener("click", () => {
-
-    mainNav.classList.toggle("show");
-
+    navigation.classList.toggle("show");
 });
 
-
-document.querySelectorAll("#mainNav a")
-.forEach(link => {
-
+document.querySelectorAll("nav a").forEach(link => {
     link.addEventListener("click", () => {
-
-        mainNav.classList.remove("show");
-
+        navigation.classList.remove("show");
     });
-
 });
 
+// -----------------------------------------------------
+// 6. TOAST MESSAGE
+// -----------------------------------------------------
 
-/* ================= YEAR ================= */
+function showToast(message, type = "normal") {
 
-document.getElementById("year")
-.textContent =
-new Date().getFullYear();
+    const toast = document.getElementById("toast");
 
-
-/* ================= TOAST ================= */
-
-function showToast(message, icon = "✓") {
-
-    const toast =
-        document.getElementById("toast");
-
-    const text =
-        document.getElementById("toastText");
-
-    const toastIcon =
-        document.getElementById("toastIcon");
-
-    toastIcon.textContent = icon;
-
-    text.textContent = message;
-
+    toast.textContent = message;
     toast.classList.add("show");
 
+    if (type === "error") {
+        toast.style.borderColor = "#ef4444";
+    } else if (type === "success") {
+        toast.style.borderColor = "#22c55e";
+    } else {
+        toast.style.borderColor = "rgba(255,255,255,0.12)";
+    }
+
     setTimeout(() => {
-
         toast.classList.remove("show");
-
-    }, 3000);
-
+    }, 3500);
 }
 
+// -----------------------------------------------------
+// 7. VISITOR COUNTER
+// -----------------------------------------------------
 
-/* =====================================================
-   VISITOR COUNTER
-===================================================== */
+function updateVisitorCounter() {
 
-/*
-   DEMO ONLY
+    let visitors =
+        Number(localStorage.getItem("trendoraVisitors")) || 0;
 
-   This counter is stored in the visitor's browser.
+    visitors++;
 
-   It is NOT a global website visitor counter.
+    localStorage.setItem("trendoraVisitors", visitors);
 
-   A real global counter requires a database.
-*/
+    document.getElementById("totalVisitors").textContent =
+        visitors;
 
-let visitors =
-    Number(
-        localStorage.getItem(
-            "trendoraVisitorCount"
-        )
-    ) || 0;
-
-visitors++;
-
-localStorage.setItem(
-    "trendoraVisitorCount",
-    visitors
-);
-
-document.getElementById("visitorCount")
-.textContent =
-formatNumber(visitors);
-
-
-/* ================= NUMBER FORMAT ================= */
-
-function formatNumber(number) {
-
-    if (number >= 1000000) {
-
-        return (
-            (number / 1000000)
-            .toFixed(1) + "M"
-        );
-
-    }
-
-    if (number >= 1000) {
-
-        return (
-            (number / 1000)
-            .toFixed(1) + "K"
-        );
-
-    }
-
-    return number;
-
+    document.getElementById("heroVisitorCount").textContent =
+        visitors;
 }
 
+function updateLiveVisitors() {
 
-/* =====================================================
-   LIVE USERS
-===================================================== */
+    /*
+       This is a demo online counter.
+       A real online-user counter needs a realtime backend.
+    */
 
-let liveUsers =
-    Math.floor(
-        Math.random() * 80
-    ) + 100;
+    const live = Math.floor(Math.random() * 20) + 10;
 
-
-const liveCount =
-    document.getElementById("liveCount");
-
-const heroLiveUsers =
-    document.getElementById(
-        "heroLiveUsers"
-    );
-
-
-function updateLiveUsers() {
-
-    const change =
-        Math.floor(
-            Math.random() * 9
-        ) - 4;
-
-    liveUsers += change;
-
-    if (liveUsers < 70) {
-        liveUsers = 70;
-    }
-
-    liveCount.textContent =
-        liveUsers;
-
-    heroLiveUsers.textContent =
-        liveUsers;
-
+    document.getElementById("liveVisitors").textContent =
+        live;
 }
 
+updateVisitorCounter();
+updateLiveVisitors();
 
-updateLiveUsers();
+setInterval(updateLiveVisitors, 15000);
 
-setInterval(
-    updateLiveUsers,
-    5000
-);
+// -----------------------------------------------------
+// 8. FILE INPUT
+// -----------------------------------------------------
 
+const fileInput = document.getElementById("fileInput");
+const selectedFileText = document.getElementById("selectedFile");
+const dropArea = document.getElementById("dropArea");
 
-/* =====================================================
-   DATABASE-LIKE LOCAL STORAGE
-===================================================== */
+fileInput.addEventListener("change", () => {
 
-let musicFiles =
-    JSON.parse(
-        localStorage.getItem(
-            "trendoraMusicFiles"
-        )
-    ) || [];
-
-
-let movieFiles =
-    JSON.parse(
-        localStorage.getItem(
-            "trendoraMovieFiles"
-        )
-    ) || [];
-
-
-/* =====================================================
-   HTML SECURITY
-===================================================== */
-
-function escapeHTML(value) {
-
-    const element =
-        document.createElement("div");
-
-    element.textContent =
-        value;
-
-    return element.innerHTML;
-
-}
-
-
-/* =====================================================
-   MUSIC RENDER
-===================================================== */
-
-function renderMusic(list = musicFiles) {
-
-    const container =
-        document.getElementById(
-            "musicList"
-        );
-
-    container.innerHTML = "";
-
-
-    if (list.length === 0) {
-
-        container.innerHTML = `
-            <div class="emptyMessage">
-                🎵 No music uploaded yet.
-                <br><br>
-                Be the first person to upload!
-            </div>
-        `;
-
+    if (!fileInput.files.length) {
         return;
     }
 
+    selectedFile = fileInput.files[0];
 
-    list.forEach((music) => {
+    selectedFileText.textContent =
+        "Selected: " + selectedFile.name;
 
-        const card =
-            document.createElement("article");
+});
 
-        card.className =
-            "musicCard";
+// Drag and drop
 
+dropArea.addEventListener("dragover", event => {
+    event.preventDefault();
+    dropArea.classList.add("dragging");
+});
+
+dropArea.addEventListener("dragleave", () => {
+    dropArea.classList.remove("dragging");
+});
+
+dropArea.addEventListener("drop", event => {
+
+    event.preventDefault();
+
+    dropArea.classList.remove("dragging");
+
+    const files = event.dataTransfer.files;
+
+    if (!files.length) {
+        return;
+    }
+
+    selectedFile = files[0];
+
+    selectedFileText.textContent =
+        "Selected: " + selectedFile.name;
+
+});
+
+// -----------------------------------------------------
+// 9. LOAD ALL CONTENT FROM SUPABASE
+// -----------------------------------------------------
+
+async function loadContent() {
+
+    await loadMusic();
+    await loadMovies();
+
+}
+
+// -----------------------------------------------------
+// 10. LOAD MUSIC
+// -----------------------------------------------------
+
+async function loadMusic() {
+
+    const loading = document.getElementById("musicLoading");
+    const empty = document.getElementById("musicEmpty");
+    const list = document.getElementById("musicList");
+
+    loading.classList.remove("hidden");
+    empty.classList.add("hidden");
+
+    const { data, error } = await supabaseClient
+        .from("uploads")
+        .select("*")
+        .eq("type", "music")
+        .order("created_at", {
+            ascending: false
+        });
+
+    loading.classList.add("hidden");
+
+    if (error) {
+        console.error(error);
+        showToast("Unable to load music.", "error");
+        return;
+    }
+
+    allMusic = data || [];
+
+    renderMusic(allMusic);
+
+}
+
+// -----------------------------------------------------
+// 11. LOAD MOVIES
+// -----------------------------------------------------
+
+async function loadMovies() {
+
+    const loading = document.getElementById("movieLoading");
+    const empty = document.getElementById("movieEmpty");
+    const list = document.getElementById("movieList");
+
+    loading.classList.remove("hidden");
+    empty.classList.add("hidden");
+
+    const { data, error } = await supabaseClient
+        .from("uploads")
+        .select("*")
+        .eq("type", "movie")
+        .order("created_at", {
+            ascending: false
+        });
+
+    loading.classList.add("hidden");
+
+    if (error) {
+        console.error(error);
+        showToast("Unable to load videos.", "error");
+        return;
+    }
+
+    allMovies = data || [];
+
+    renderMovies(allMovies);
+
+}
+
+// -----------------------------------------------------
+// 12. RENDER MUSIC
+// -----------------------------------------------------
+
+function renderMusic(items) {
+
+    const list = document.getElementById("musicList");
+    const empty = document.getElementById("musicEmpty");
+
+    list.innerHTML = "";
+
+    if (!items.length) {
+        empty.classList.remove("hidden");
+        return;
+    }
+
+    empty.classList.add("hidden");
+
+    items.forEach(item => {
+
+        const card = document.createElement("div");
+
+        card.className = "content-card";
 
         card.innerHTML = `
-
-            <div class="musicIcon">
+            <div class="content-card-header">
                 🎵
             </div>
 
-            <div class="musicDetails">
+            <div class="content-card-body">
 
-                <h3>
-                    ${escapeHTML(music.title)}
+                <h3 title="${escapeHTML(item.title)}">
+                    ${escapeHTML(item.title)}
                 </h3>
 
                 <p>
-                    Uploaded by
-                    ${escapeHTML(music.uploader)}
+                    Uploaded by ${escapeHTML(
+                        item.uploader_name || "Trendora User"
+                    )}
                 </p>
 
-            </div>
+                <audio controls preload="metadata">
+                    <source src="${item.file_url}">
+                    Your browser does not support audio.
+                </audio>
 
+                <div class="content-date">
+                    ${formatDate(item.created_at)}
+                </div>
+
+            </div>
         `;
 
-
-        if (music.file) {
-
-            const audio =
-                document.createElement(
-                    "audio"
-                );
-
-            audio.controls = true;
-
-            audio.preload =
-                "metadata";
-
-            const source =
-                document.createElement(
-                    "source"
-                );
-
-            source.src =
-                music.file;
-
-            source.type =
-                music.fileType ||
-                "audio/mpeg";
-
-            audio.appendChild(
-                source
-            );
-
-            card.appendChild(
-                audio
-            );
-
-        }
-
-
-        container.appendChild(
-            card
-        );
+        list.appendChild(card);
 
     });
 
 }
 
+// -----------------------------------------------------
+// 13. RENDER MOVIES
+// -----------------------------------------------------
 
-/* =====================================================
-   MOVIE RENDER
-===================================================== */
+function renderMovies(items) {
 
-function renderMovies(list = movieFiles) {
+    const list = document.getElementById("movieList");
+    const empty = document.getElementById("movieEmpty");
 
-    const container =
-        document.getElementById(
-            "movieList"
-        );
+    list.innerHTML = "";
 
-    container.innerHTML = "";
-
-
-    if (list.length === 0) {
-
-        container.innerHTML = `
-            <div class="emptyMessage">
-                🎬 No videos uploaded yet.
-                <br><br>
-                Upload the first video!
-            </div>
-        `;
-
+    if (!items.length) {
+        empty.classList.remove("hidden");
         return;
     }
 
+    empty.classList.add("hidden");
 
-    list.forEach((movie) => {
+    items.forEach(item => {
 
-        const card =
-            document.createElement(
-                "article"
-            );
+        const card = document.createElement("div");
 
-        card.className =
-            "movieCard";
+        card.className = "content-card video";
 
+        card.innerHTML = `
+            <div class="content-card-header">
+                🎬
+            </div>
 
-        if (movie.file) {
+            <video controls preload="metadata">
+                <source src="${item.file_url}">
+                Your browser does not support video.
+            </video>
 
-            const video =
-                document.createElement(
-                    "video"
-                );
+            <div class="content-card-body">
 
-            video.className =
-                "movieVideo";
+                <h3 title="${escapeHTML(item.title)}">
+                    ${escapeHTML(item.title)}
+                </h3>
 
-            video.controls = true;
+                <p>
+                    Uploaded by ${escapeHTML(
+                        item.uploader_name || "Trendora User"
+                    )}
+                </p>
 
-            video.preload =
-                "metadata";
+                <div class="content-date">
+                    ${formatDate(item.created_at)}
+                </div>
 
-            const source =
-                document.createElement(
-                    "source"
-                );
-
-            source.src =
-                movie.file;
-
-            source.type =
-                movie.fileType ||
-                "video/mp4";
-
-            video.appendChild(
-                source
-            );
-
-            card.appendChild(
-                video
-            );
-
-        } else {
-
-            const placeholder =
-                document.createElement(
-                    "div"
-                );
-
-            placeholder.className =
-                "moviePlaceholder";
-
-            placeholder.textContent =
-                "🎬";
-
-            card.appendChild(
-                placeholder
-            );
-
-        }
-
-
-        const details =
-            document.createElement(
-                "div"
-            );
-
-        details.className =
-            "movieDetails";
-
-
-        details.innerHTML = `
-
-            <h3>
-                ${escapeHTML(movie.title)}
-            </h3>
-
-            <p>
-                Uploaded by
-                ${escapeHTML(movie.uploader)}
-            </p>
-
+            </div>
         `;
 
-
-        card.appendChild(
-            details
-        );
-
-        container.appendChild(
-            card
-        );
+        list.appendChild(card);
 
     });
 
 }
 
+// -----------------------------------------------------
+// 14. UPLOAD FORM
+// -----------------------------------------------------
 
-/* =====================================================
-   COUNTERS
-===================================================== */
+const uploadForm = document.getElementById("uploadForm");
 
-function updateMediaCounters() {
+uploadForm.addEventListener("submit", async event => {
 
-    document.getElementById(
-        "musicCount"
-    ).textContent =
-        musicFiles.length;
+    event.preventDefault();
 
+    const title =
+        document.getElementById("contentTitle").value.trim();
 
-    document.getElementById(
-        "movieCount"
-    ).textContent =
-        movieFiles.length;
+    const uploaderName =
+        document.getElementById("uploaderName").value.trim()
+        || "Trendora User";
 
-}
+    const type =
+        document.getElementById("contentType").value;
 
+    const uploadButton =
+        document.getElementById("uploadButton");
 
-updateMediaCounters();
+    const uploadButtonText =
+        document.getElementById("uploadButtonText");
 
+    const progressContainer =
+        document.getElementById("progressContainer");
 
-/* =====================================================
-   UPLOAD TYPE
-===================================================== */
+    const progressBar =
+        document.getElementById("progressBar");
 
-let uploadType =
-    "music";
+    const progressText =
+        document.getElementById("progressText");
 
-
-const uploadTabs =
-    document.querySelectorAll(
-        ".uploadTab"
-    );
-
-
-const mediaFile =
-    document.getElementById(
-        "mediaFile"
-    );
-
-
-const uploadIcon =
-    document.getElementById(
-        "uploadIcon"
-    );
-
-
-const uploadTitle =
-    document.getElementById(
-        "uploadTitle"
-    );
-
-
-const uploadDescription =
-    document.getElementById(
-        "uploadDescription"
-    );
-
-
-uploadTabs.forEach(tab => {
-
-    tab.addEventListener(
-        "click",
-        () => {
-
-            uploadTabs.forEach(
-                item =>
-                item.classList.remove(
-                    "active"
-                )
-            );
-
-            tab.classList.add(
-                "active"
-            );
-
-
-            uploadType =
-                tab.dataset.type;
-
-
-            if (
-                uploadType ===
-                "music"
-            ) {
-
-                uploadIcon.textContent =
-                    "🎵";
-
-                uploadTitle.textContent =
-                    "Upload Your Music";
-
-                uploadDescription.textContent =
-                    "Select an audio file from your device.";
-
-                mediaFile.accept =
-                    "audio/*";
-
-            } else {
-
-                uploadIcon.textContent =
-                    "🎬";
-
-                uploadTitle.textContent =
-                    "Upload Your Video";
-
-                uploadDescription.textContent =
-                    "Select a video file from your device.";
-
-                mediaFile.accept =
-                    "video/*";
-
-            }
-
-
-            mediaFile.value = "";
-
-            document.getElementById(
-                "selectedFile"
-            ).textContent =
-                "No file selected";
-
-        }
-    );
-
-});
-
-
-/* =====================================================
-   FILE SELECT
-===================================================== */
-
-mediaFile.addEventListener(
-    "change",
-    () => {
-
-        const file =
-            mediaFile.files[0];
-
-        if (!file) {
-
-            document.getElementById(
-                "selectedFile"
-            ).textContent =
-                "No file selected";
-
-            return;
-        }
-
-
-        document.getElementById(
-            "selectedFile"
-        ).textContent =
-            `${file.name} • ${formatBytes(file.size)}`;
-
-    }
-);
-
-
-/* =====================================================
-   DRAG & DROP
-===================================================== */
-
-const dropZone =
-    document.getElementById(
-        "dropZone"
-    );
-
-
-dropZone.addEventListener(
-    "dragover",
-    event => {
-
-        event.preventDefault();
-
-        dropZone.classList.add(
-            "dragover"
-        );
-
-    }
-);
-
-
-dropZone.addEventListener(
-    "dragleave",
-    () => {
-
-        dropZone.classList.remove(
-            "dragover"
-        );
-
-    }
-);
-
-
-dropZone.addEventListener(
-    "drop",
-    event => {
-
-        event.preventDefault();
-
-        dropZone.classList.remove(
-            "dragover"
-        );
-
-
-        const files =
-            event.dataTransfer.files;
-
-
-        if (files.length > 0) {
-
-            mediaFile.files =
-                files;
-
-            mediaFile.dispatchEvent(
-                new Event("change")
-            );
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   FILE SIZE
-===================================================== */
-
-function formatBytes(bytes) {
-
-    if (bytes === 0) {
-        return "0 Bytes";
+    if (!selectedFile) {
+        showToast("Please choose a file first.", "error");
+        return;
     }
 
+    if (!title) {
+        showToast("Please enter a title.", "error");
+        return;
+    }
 
-    const units = [
-        "Bytes",
-        "KB",
-        "MB",
-        "GB"
-    ];
+    // Maximum file size: 100 MB
+    const maxSize = 100 * 1024 * 1024;
 
+    if (selectedFile.size > maxSize) {
+        showToast("File must be smaller than 100 MB.", "error");
+        return;
+    }
 
-    const index =
-        Math.floor(
-            Math.log(bytes) /
-            Math.log(1024)
-        );
+    const isAudio =
+        selectedFile.type.startsWith("audio/");
 
+    const isVideo =
+        selectedFile.type.startsWith("video/");
 
-    return (
-        parseFloat(
-            (
-                bytes /
-                Math.pow(
-                    1024,
-                    index
-                )
-            ).toFixed(2)
-        ) +
-        " " +
-        units[index]
-    );
+    if (type === "music" && !isAudio) {
+        showToast("Please select an audio file.", "error");
+        return;
+    }
 
-}
+    if (type === "movie" && !isVideo) {
+        showToast("Please select a video file.", "error");
+        return;
+    }
 
+    uploadButton.disabled = true;
+    uploadButtonText.textContent = "Uploading...";
+    progressContainer.classList.remove("hidden");
 
-/* =====================================================
-   UPLOAD
-===================================================== */
+    progressBar.style.width = "20%";
+    progressText.textContent = "Preparing file...";
 
-document.getElementById(
-    "uploadForm"
-).addEventListener(
-    "submit",
-    function(event) {
+    try {
 
-        event.preventDefault();
+        // Create a unique filename
+        const fileExtension =
+            selectedFile.name.split(".").pop();
 
+        const uniqueName =
+            Date.now() +
+            "-" +
+            Math.random().toString(36).substring(2, 10) +
+            "." +
+            fileExtension;
 
-        const file =
-            mediaFile.files[0];
+        const filePath =
+            type + "/" + uniqueName;
 
+        progressBar.style.width = "45%";
+        progressText.textContent = "Uploading file to storage...";
 
-        const title =
-            document.getElementById(
-                "mediaTitle"
-            ).value.trim();
+        // Upload file to Supabase Storage
+        const { error: storageError } =
+            await supabaseClient.storage
+                .from(STORAGE_BUCKET)
+                .upload(filePath, selectedFile, {
+                    cacheControl: "3600",
+                    upsert: false,
+                    contentType: selectedFile.type
+                });
 
-
-        const uploader =
-            document.getElementById(
-                "uploaderName"
-            ).value.trim();
-
-
-        if (!file) {
-
-            showToast(
-                "Please select a file.",
-                "⚠️"
-            );
-
-            return;
+        if (storageError) {
+            throw storageError;
         }
 
+        progressBar.style.width = "75%";
+        progressText.textContent = "Saving file information...";
 
-        if (!title) {
+        // Get public URL
+        const { data: publicURLData } =
+            supabaseClient.storage
+                .from(STORAGE_BUCKET)
+                .getPublicUrl(filePath);
 
-            showToast(
-                "Enter a title.",
-                "⚠️"
-            );
+        const publicURL =
+            publicURLData.publicUrl;
 
-            return;
+        // Save information in database
+        const { error: databaseError } =
+            await supabaseClient
+                .from("uploads")
+                .insert({
+                    title: title,
+                    type: type,
+                    file_url: publicURL,
+                    file_name: selectedFile.name,
+                    uploader_name: uploaderName
+                });
+
+        if (databaseError) {
+            throw databaseError;
         }
 
-
-        if (!uploader) {
-
-            showToast(
-                "Enter your name.",
-                "⚠️"
-            );
-
-            return;
-        }
-
-
-        /* ================= LIMIT ================= */
-
-        const maxSize =
-            100 * 1024 * 1024;
-
-
-        if (file.size > maxSize) {
-
-            showToast(
-                "Maximum file size is 100 MB.",
-                "⚠️"
-            );
-
-            return;
-        }
-
-
-        /* ================= TYPE ================= */
-
-        if (
-            uploadType === "music" &&
-            !file.type.startsWith(
-                "audio/"
-            )
-        ) {
-
-            showToast(
-                "Please select an audio file.",
-                "⚠️"
-            );
-
-            return;
-        }
-
-
-        if (
-            uploadType === "video" &&
-            !file.type.startsWith(
-                "video/"
-            )
-        ) {
-
-            showToast(
-                "Please select a video file.",
-                "⚠️"
-            );
-
-            return;
-        }
-
-
-        /*
-            DEMO LOCAL FILE URL
-
-            This works during the current
-            browser session.
-
-            For REAL PUBLIC UPLOADS,
-            replace this section with
-            Firebase/Supabase Storage.
-        */
-
-        const fileURL =
-            URL.createObjectURL(
-                file
-            );
-
-
-        const item = {
-
-            id:
-                Date.now().toString(),
-
-            title:
-                title,
-
-            uploader:
-                uploader,
-
-            file:
-                fileURL,
-
-            fileName:
-                file.name,
-
-            fileType:
-                file.type,
-
-            size:
-                file.size,
-
-            uploadedAt:
-                new Date().toISOString()
-
-        };
-
-
-        if (
-            uploadType ===
-            "music"
-        ) {
-
-            musicFiles.unshift(
-                item
-            );
-
-
-            /*
-                Store metadata.
-
-                NOTE:
-                Blob URL itself is temporary.
-            */
-
-            try {
-
-                localStorage.setItem(
-                    "trendoraMusicFiles",
-                    JSON.stringify(
-                        musicFiles
-                    )
-                );
-
-            } catch(error) {
-
-                console.log(
-                    "Browser storage limit reached."
-                );
-
-            }
-
-
-            renderMusic();
-
-
-        } else {
-
-            movieFiles.unshift(
-                item
-            );
-
-
-            try {
-
-                localStorage.setItem(
-                    "trendoraMovieFiles",
-                    JSON.stringify(
-                        movieFiles
-                    )
-                );
-
-            } catch(error) {
-
-                console.log(
-                    "Browser storage limit reached."
-                );
-
-            }
-
-
-            renderMovies();
-
-        }
-
-
-        updateMediaCounters();
-
-
-        this.reset();
-
-
-        document.getElementById(
-            "selectedFile"
-        ).textContent =
-            "No file selected";
-
+        progressBar.style.width = "100%";
+        progressText.textContent = "Upload completed!";
 
         showToast(
-            "Published successfully!",
-            "🚀"
+            "Your content is now publicly available!",
+            "success"
         );
 
+        uploadForm.reset();
+        selectedFile = null;
+        selectedFileText.textContent = "";
 
         setTimeout(() => {
+            progressContainer.classList.add("hidden");
+            progressBar.style.width = "0%";
+        }, 1500);
 
-            if (
-                uploadType ===
-                "music"
-            ) {
+        await loadContent();
 
-                document.getElementById(
-                    "music"
-                ).scrollIntoView({
-                    behavior: "smooth"
-                });
+        document.getElementById("music").scrollIntoView({
+            behavior: "smooth"
+        });
 
-            } else {
+    } catch (error) {
 
-                document.getElementById(
-                    "movies"
-                ).scrollIntoView({
-                    behavior: "smooth"
-                });
+        console.error("Upload error:", error);
 
-            }
-
-        }, 400);
-
-    }
-);
-
-
-/* =====================================================
-   MUSIC SEARCH
-===================================================== */
-
-document.getElementById(
-    "musicSearch"
-).addEventListener(
-    "input",
-    function() {
-
-        const query =
-            this.value
-            .toLowerCase()
-            .trim();
-
-
-        const filtered =
-            musicFiles.filter(
-                item =>
-
-                item.title
-                    .toLowerCase()
-                    .includes(query)
-
-                ||
-
-                item.uploader
-                    .toLowerCase()
-                    .includes(query)
-            );
-
-
-        renderMusic(
-            filtered
+        showToast(
+            "Upload failed: " + (error.message || "Unknown error"),
+            "error"
         );
 
-    }
-);
+        progressContainer.classList.add("hidden");
 
+    } finally {
 
-/* =====================================================
-   MOVIE SEARCH
-===================================================== */
-
-document.getElementById(
-    "movieSearch"
-).addEventListener(
-    "input",
-    function() {
-
-        const query =
-            this.value
-            .toLowerCase()
-            .trim();
-
-
-        const filtered =
-            movieFiles.filter(
-                item =>
-
-                item.title
-                    .toLowerCase()
-                    .includes(query)
-
-                ||
-
-                item.uploader
-                    .toLowerCase()
-                    .includes(query)
-            );
-
-
-        renderMovies(
-            filtered
-        );
+        uploadButton.disabled = false;
+        uploadButtonText.textContent = "Upload Publicly ↑";
 
     }
-);
-
-
-/* =====================================================
-   CATEGORY BUTTONS
-===================================================== */
-
-document.querySelectorAll(
-    ".categoryCard"
-).forEach(button => {
-
-    button.addEventListener(
-        "click",
-        () => {
-
-            const text =
-                button
-                .querySelector("span")
-                .textContent;
-
-            showToast(
-                `${text} category selected`,
-                "✨"
-            );
-
-        }
-    );
 
 });
 
+// -----------------------------------------------------
+// 15. SEARCH MUSIC
+// -----------------------------------------------------
 
-/* =====================================================
-   ACTIVE NAVIGATION
-===================================================== */
+document.getElementById("musicSearch")
+    .addEventListener("input", event => {
 
-const sections =
-    document.querySelectorAll(
-        "section[id]"
+        const search =
+            event.target.value.toLowerCase();
+
+        const filtered =
+            allMusic.filter(item =>
+                item.title.toLowerCase().includes(search)
+            );
+
+        renderMusic(filtered);
+
+    });
+
+// -----------------------------------------------------
+// 16. SEARCH MOVIES
+// -----------------------------------------------------
+
+document.getElementById("movieSearch")
+    .addEventListener("input", event => {
+
+        const search =
+            event.target.value.toLowerCase();
+
+        const filtered =
+            allMovies.filter(item =>
+                item.title.toLowerCase().includes(search)
+            );
+
+        renderMovies(filtered);
+
+    });
+
+// -----------------------------------------------------
+// 17. UPDATE STATISTICS
+// -----------------------------------------------------
+
+function updateStatistics() {
+
+    const musicTotal = allMusic.length;
+    const movieTotal = allMovies.length;
+
+    document.getElementById("musicCount").textContent =
+        musicTotal;
+
+    document.getElementById("movieCount").textContent =
+        movieTotal;
+
+    document.getElementById("heroMusicCount").textContent =
+        musicTotal;
+
+    document.getElementById("heroMovieCount").textContent =
+        movieTotal;
+
+}
+
+// Replace load functions with statistics update
+const originalLoadMusic = loadMusic;
+const originalLoadMovies = loadMovies;
+
+// -----------------------------------------------------
+// 18. DATE FORMAT
+// -----------------------------------------------------
+
+function formatDate(date) {
+
+    if (!date) {
+        return "Recently uploaded";
+    }
+
+    return new Date(date).toLocaleDateString(
+        "en-IN",
+        {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+        }
     );
 
+}
 
-window.addEventListener(
-    "scroll",
-    () => {
+// -----------------------------------------------------
+// 19. HTML SECURITY
+// -----------------------------------------------------
 
-        let current = "";
+function escapeHTML(value) {
 
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 
-        sections.forEach(
-            section => {
+}
 
-                const top =
-                    section.offsetTop
-                    - 150;
+// -----------------------------------------------------
+// 20. LOAD CONTENT AND UPDATE STATS
+// -----------------------------------------------------
 
+async function startApplication() {
 
-                if (
-                    window.scrollY >=
-                    top
-                ) {
+    await loadContent();
+    updateStatistics();
 
-                    current =
-                        section.id;
+}
 
-                }
+startApplication();
 
-            }
-        );
+// Refresh content every 30 seconds
+setInterval(async () => {
 
+    await loadContent();
+    updateStatistics();
 
-        document.querySelectorAll(
-            "#mainNav a"
-        ).forEach(
-            link => {
+}, 30000);
 
-                link.classList.remove(
-                    "active"
-                );
+// -----------------------------------------------------
+// 21. ACTIVE NAVIGATION
+// -----------------------------------------------------
 
+const sections = document.querySelectorAll("section[id]");
+const navLinks = document.querySelectorAll("nav a");
 
-                if (
-                    link.getAttribute(
-                        "href"
-                    ) ===
-                    "#" + current
-                ) {
+window.addEventListener("scroll", () => {
 
-                    link.classList.add(
-                        "active"
-                    );
+    let current = "";
 
-                }
+    sections.forEach(section => {
 
-            }
-        );
+        const sectionTop =
+            section.offsetTop - 150;
 
-    }
-);
+        if (window.scrollY >= sectionTop) {
+            current = section.getAttribute("id");
+        }
 
+    });
 
-/* =====================================================
-   INITIALIZE
-===================================================== */
+    navLinks.forEach(link => {
 
-renderMusic();
+        link.classList.remove("active");
 
-renderMovies();
+        if (link.getAttribute("href") === "#" + current) {
+            link.classList.add("active");
+        }
 
-updateMediaCounters();
+    });
+
+});
