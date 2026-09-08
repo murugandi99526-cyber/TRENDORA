@@ -5,547 +5,520 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Trendora | Your Trend Universe</title>
-    <meta name="description" content="Discover trending music, videos and entertainment on Trendora.">
+
+    <meta
+        name="description"
+        content="Trendora - Discover music, movies and trending entertainment."
+    >
 
     <link rel="icon" href="logo.png">
     <link rel="stylesheet" href="style.css">
 
-    <!-- Supabase JavaScript library -->
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
 
-    <!-- LOADING SCREEN -->
+    <!-- Loading screen -->
     <div id="loader">
         <div class="loader-logo">
-            <img src="logo.png" alt="Trendora logo">
+            <img src="logo.png" alt="Trendora Logo">
         </div>
-        <div class="loader-spinner"></div>
-        <p>Loading Trendora...</p>
+        <h2>Loading Trendora...</h2>
+        <div class="loading-line"></div>
     </div>
 
-    <!-- BACKGROUND EFFECTS -->
+    <!-- Background effects -->
     <div class="background-glow glow-one"></div>
     <div class="background-glow glow-two"></div>
 
-    <!-- HEADER -->
-    <header class="header">
-        <div class="container nav-container">
+    <!-- Navigation -->
+    <header class="navbar">
 
-            <a href="#home" class="brand">
-                <div class="brand-logo">
-                    <img src="logo.png" alt="Trendora">
-                </div>
-
-                <div class="brand-text">
-                    <strong>TRENDORA</strong>
-                    <span>YOUR TREND UNIVERSE</span>
-                </div>
-            </a>
-
-            <nav class="nav-links" id="navLinks">
-                <a href="#home" class="active">Home</a>
-                <a href="#trending">Trending</a>
-                <a href="#music">Music</a>
-                <a href="#videos">Videos</a>
-                <a href="#upload">Upload</a>
-            </nav>
-
-            <div class="nav-actions">
-                <button class="icon-button" id="themeButton" title="Change theme">
-                    ◐
-                </button>
-
-                <button class="menu-button" id="menuButton">
-                    ☰
-                </button>
+        <a href="#home" class="brand">
+            <div class="brand-logo">
+                <img src="logo.png" alt="Trendora">
             </div>
 
-        </div>
+            <div class="brand-text">
+                <strong>TRENDORA</strong>
+                <span>YOUR TREND UNIVERSE</span>
+            </div>
+        </a>
+
+        <button class="menu-button" id="menuButton">
+            ☰
+        </button>
+
+        <nav id="navigation">
+            <a href="#home" class="active">Home</a>
+            <a href="#trending">Trending</a>
+            <a href="#music">Music</a>
+            <a href="#movies">Movies</a>
+            <a href="#upload">Upload</a>
+            <a href="#about">About</a>
+        </nav>
+
     </header>
 
-    <!-- MAIN -->
     <main>
 
-        <!-- HERO SECTION -->
-        <section class="hero" id="home">
-            <div class="container hero-content">
+        <!-- Hero -->
+        <section class="hero section" id="home">
 
-                <div class="hero-text">
-                    <div class="hero-badge">
-                        <span class="pulse-dot"></span>
-                        THE INTERNET'S TREND UNIVERSE
+            <div class="hero-content">
+
+                <div class="hero-badge">
+                    ✨ THE WORLD OF ENTERTAINMENT
+                </div>
+
+                <h1>
+                    Discover What's
+                    <span>Trending</span>
+                    Now
+                </h1>
+
+                <p>
+                    Explore music, movies and entertainment.
+                    Upload your own content and share it with the Trendora community.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="#trending" class="primary-button">
+                        Explore Trends →
+                    </a>
+
+                    <a href="#upload" class="secondary-button">
+                        Upload Content
+                    </a>
+                </div>
+
+                <div class="hero-mini-stats">
+                    <div>
+                        <strong id="heroMusicCount">0</strong>
+                        <span>Music Uploads</span>
                     </div>
 
-                    <h1>
-                        Discover
-                        <span class="gradient-text">What's Next.</span>
-                    </h1>
+                    <div>
+                        <strong id="heroMovieCount">0</strong>
+                        <span>Movie Uploads</span>
+                    </div>
+
+                    <div>
+                        <strong id="heroVisitorCount">0</strong>
+                        <span>Total Visitors</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="hero-visual">
+
+                <div class="floating-card card-one">
+                    <span>🎵</span>
+                    <div>
+                        <strong>Music</strong>
+                        <small>Listen to trends</small>
+                    </div>
+                </div>
+
+                <div class="main-orb">
+                    <img src="logo.png" alt="Trendora">
+                    <div class="orb-ring ring-one"></div>
+                    <div class="orb-ring ring-two"></div>
+                </div>
+
+                <div class="floating-card card-two">
+                    <span>🎬</span>
+                    <div>
+                        <strong>Movies</strong>
+                        <small>Watch entertainment</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Live statistics -->
+        <section class="stats-section">
+
+            <div class="stat-box">
+                <div class="stat-icon">👥</div>
+                <div>
+                    <strong id="totalVisitors">0</strong>
+                    <span>Total Visitors</span>
+                </div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-icon">🟢</div>
+                <div>
+                    <strong id="liveVisitors">0</strong>
+                    <span>Online Now</span>
+                </div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-icon">🎵</div>
+                <div>
+                    <strong id="musicCount">0</strong>
+                    <span>Music Files</span>
+                </div>
+            </div>
+
+            <div class="stat-box">
+                <div class="stat-icon">🎬</div>
+                <div>
+                    <strong id="movieCount">0</strong>
+                    <span>Video Files</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Trending -->
+        <section class="section" id="trending">
+
+            <div class="section-heading">
+                <div>
+                    <span class="section-label">EXPLORE NOW</span>
+                    <h2>Trending <span>Universe</span></h2>
+                    <p>Find the latest content uploaded by the community.</p>
+                </div>
+
+                <div class="live-indicator">
+                    <span></span> Live Updates
+                </div>
+            </div>
+
+            <div class="trend-grid">
+
+                <div class="trend-card">
+                    <div class="trend-image music-gradient">
+                        <span>🎧</span>
+                        <div class="trend-play">▶</div>
+                    </div>
+                    <div class="trend-info">
+                        <span class="category-tag">MUSIC</span>
+                        <h3>Latest Music</h3>
+                        <p>Discover new songs and audio uploads.</p>
+                        <a href="#music">Explore Music →</a>
+                    </div>
+                </div>
+
+                <div class="trend-card">
+                    <div class="trend-image movie-gradient">
+                        <span>🎬</span>
+                        <div class="trend-play">▶</div>
+                    </div>
+                    <div class="trend-info">
+                        <span class="category-tag">MOVIES</span>
+                        <h3>Movie Universe</h3>
+                        <p>Watch videos shared by Trendora users.</p>
+                        <a href="#movies">Explore Movies →</a>
+                    </div>
+                </div>
+
+                <div class="trend-card">
+                    <div class="trend-image community-gradient">
+                        <span>🌍</span>
+                        <div class="trend-play">▶</div>
+                    </div>
+                    <div class="trend-info">
+                        <span class="category-tag">COMMUNITY</span>
+                        <h3>Share With Everyone</h3>
+                        <p>Upload your own music and videos.</p>
+                        <a href="#upload">Upload Now →</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Music -->
+        <section class="section content-section" id="music">
+
+            <div class="section-heading">
+                <div>
+                    <span class="section-label">AUDIO WORLD</span>
+                    <h2>Movie <span>Music</span></h2>
+                    <p>Listen to music uploaded by Trendora users.</p>
+                </div>
+
+                <div class="search-box">
+                    <span>⌕</span>
+                    <input
+                        type="search"
+                        id="musicSearch"
+                        placeholder="Search music..."
+                    >
+                </div>
+            </div>
+
+            <div id="musicLoading" class="loading-message">
+                Loading music...
+            </div>
+
+            <div id="musicEmpty" class="empty-state hidden">
+                <div>🎵</div>
+                <h3>No music uploaded yet</h3>
+                <p>Be the first person to upload music.</p>
+                <a href="#upload" class="primary-button">Upload Music</a>
+            </div>
+
+            <div class="content-grid" id="musicList"></div>
+
+        </section>
+
+        <!-- Movies -->
+        <section class="section content-section" id="movies">
+
+            <div class="section-heading">
+                <div>
+                    <span class="section-label">VIDEO WORLD</span>
+                    <h2>Movie <span>Videos</span></h2>
+                    <p>Watch videos uploaded by the Trendora community.</p>
+                </div>
+
+                <div class="search-box">
+                    <span>⌕</span>
+                    <input
+                        type="search"
+                        id="movieSearch"
+                        placeholder="Search videos..."
+                    >
+                </div>
+            </div>
+
+            <div id="movieLoading" class="loading-message">
+                Loading videos...
+            </div>
+
+            <div id="movieEmpty" class="empty-state hidden">
+                <div>🎬</div>
+                <h3>No videos uploaded yet</h3>
+                <p>Upload the first video to Trendora.</p>
+                <a href="#upload" class="primary-button">Upload Video</a>
+            </div>
+
+            <div class="content-grid" id="movieList"></div>
+
+        </section>
+
+        <!-- Upload -->
+        <section class="section upload-section" id="upload">
+
+            <div class="section-heading centered">
+                <div>
+                    <span class="section-label">SHARE YOUR CONTENT</span>
+                    <h2>Upload to <span>Trendora</span></h2>
+                    <p>
+                        Upload music or videos and make them available
+                        to everyone.
+                    </p>
+                </div>
+            </div>
+
+            <div class="upload-container">
+
+                <div class="upload-information">
+
+                    <div class="upload-icon">☁️</div>
+
+                    <h3>Share Your Entertainment</h3>
 
                     <p>
-                        Explore trending music, exciting videos and fresh
-                        entertainment — all in one beautiful place.
+                        Your file will be uploaded to Supabase Storage
+                        and displayed publicly on Trendora.
                     </p>
 
-                    <div class="hero-buttons">
-                        <a href="#trending" class="primary-button">
-                            Explore Trends <span>→</span>
-                        </a>
-
-                        <a href="#upload" class="secondary-button">
-                            Upload Your Content
-                        </a>
-                    </div>
-
-                    <div class="hero-mini-stats">
-                        <div>
-                            <strong id="heroMusicCount">0</strong>
-                            <span>Music uploads</span>
-                        </div>
-
-                        <div>
-                            <strong id="heroVideoCount">0</strong>
-                            <span>Video uploads</span>
-                        </div>
-
-                        <div>
-                            <strong>24/7</strong>
-                            <span>Entertainment</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="hero-visual">
-
-                    <div class="floating-card card-top">
-                        <span class="mini-icon">🔥</span>
-                        <div>
-                            <strong>Trending Now</strong>
-                            <small>Discover something new</small>
-                        </div>
-                    </div>
-
-                    <div class="hero-orb">
-                        <div class="orb-ring ring-one"></div>
-                        <div class="orb-ring ring-two"></div>
-
-                        <div class="orb-content">
-                            <img src="logo.png" alt="Trendora">
-                            <span>EXPLORE</span>
-                        </div>
-
-                        <div class="orb-particle particle-one"></div>
-                        <div class="orb-particle particle-two"></div>
-                        <div class="orb-particle particle-three"></div>
-                    </div>
-
-                    <div class="floating-card card-bottom">
-                        <span class="mini-icon">🎧</span>
-                        <div>
-                            <strong>Listen & Enjoy</strong>
-                            <small>Music for every mood</small>
-                        </div>
+                    <div class="upload-features">
+                        <div>✓ Public file storage</div>
+                        <div>✓ Audio and video support</div>
+                        <div>✓ Works on mobile</div>
+                        <div>✓ Content appears for everyone</div>
                     </div>
 
                 </div>
 
-            </div>
+                <form id="uploadForm" class="upload-form">
 
-            <div class="hero-wave"></div>
-        </section>
+                    <div class="form-group">
+                        <label for="contentTitle">Content Title</label>
 
-        <!-- QUICK CATEGORIES -->
-        <section class="category-strip">
-            <div class="container category-scroll">
-
-                <a href="#music" class="category-pill active-category">
-                    <span>🎵</span> Music
-                </a>
-
-                <a href="#videos" class="category-pill">
-                    <span>🎬</span> Videos
-                </a>
-
-                <a href="#trending" class="category-pill">
-                    <span>🔥</span> Trending
-                </a>
-
-                <a href="#upload" class="category-pill">
-                    <span>☁️</span> Upload
-                </a>
-
-                <a href="#about" class="category-pill">
-                    <span>✨</span> About
-                </a>
-
-            </div>
-        </section>
-
-        <!-- TRENDING SECTION -->
-        <section class="section" id="trending">
-            <div class="container">
-
-                <div class="section-heading">
-                    <div>
-                        <span class="section-label">DISCOVER</span>
-                        <h2>Trending <span class="gradient-text">Universe</span></h2>
-                        <p>Fresh content uploaded by the Trendora community.</p>
-                    </div>
-
-                    <div class="live-badge">
-                        <span class="live-dot"></span>
-                        LIVE
-                    </div>
-                </div>
-
-                <div class="trending-grid">
-
-                    <div class="trend-feature-card">
-                        <div class="feature-background">
-                            <span>🎵</span>
-                        </div>
-
-                        <div class="feature-content">
-                            <span class="small-tag">MUSIC</span>
-                            <h3>Find Your Next Favourite Sound</h3>
-                            <p>Listen to music shared by the community.</p>
-
-                            <a href="#music" class="feature-link">
-                                Explore Music →
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="trend-small-card">
-                        <div class="small-card-icon">🎬</div>
-                        <div>
-                            <span>VIDEOS</span>
-                            <h3>Watch Something Amazing</h3>
-                            <a href="#videos">Watch now →</a>
-                        </div>
-                    </div>
-
-                    <div class="trend-small-card">
-                        <div class="small-card-icon">☁️</div>
-                        <div>
-                            <span>COMMUNITY</span>
-                            <h3>Share Your Creativity</h3>
-                            <a href="#upload">Upload now →</a>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </section>
-
-        <!-- MUSIC SECTION -->
-        <section class="section section-dark" id="music">
-            <div class="container">
-
-                <div class="section-heading">
-                    <div>
-                        <span class="section-label">LISTEN NOW</span>
-                        <h2>Music <span class="gradient-text">Station</span></h2>
-                        <p>Enjoy music uploaded by Trendora users.</p>
-                    </div>
-
-                    <div class="search-box">
-                        <span>⌕</span>
                         <input
-                            type="search"
-                            id="musicSearch"
-                            placeholder="Search music..."
+                            type="text"
+                            id="contentTitle"
+                            placeholder="Enter song or video title"
+                            required
                         >
                     </div>
-                </div>
 
-                <div class="media-grid" id="musicGrid">
-                    <div class="empty-state">
-                        <div>🎵</div>
-                        <h3>No music uploaded yet</h3>
-                        <p>Be the first person to share music!</p>
-                    </div>
-                </div>
+                    <div class="form-row">
 
-            </div>
-        </section>
-
-        <!-- VIDEO SECTION -->
-        <section class="section" id="videos">
-            <div class="container">
-
-                <div class="section-heading">
-                    <div>
-                        <span class="section-label">WATCH NOW</span>
-                        <h2>Video <span class="gradient-text">World</span></h2>
-                        <p>Discover interesting videos from the community.</p>
-                    </div>
-
-                    <div class="search-box">
-                        <span>⌕</span>
-                        <input
-                            type="search"
-                            id="videoSearch"
-                            placeholder="Search videos..."
-                        >
-                    </div>
-                </div>
-
-                <div class="media-grid" id="videoGrid">
-                    <div class="empty-state">
-                        <div>🎬</div>
-                        <h3>No videos uploaded yet</h3>
-                        <p>Upload your first video to Trendora!</p>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- UPLOAD SECTION -->
-        <section class="section upload-section" id="upload">
-            <div class="container">
-
-                <div class="upload-layout">
-
-                    <div class="upload-info">
-                        <span class="section-label">SHARE YOUR WORLD</span>
-
-                        <h2>
-                            Your Content.
-                            <span class="gradient-text">Your Stage.</span>
-                        </h2>
-
-                        <p>
-                            Upload your music or videos and share your
-                            creativity with the Trendora community.
-                        </p>
-
-                        <div class="upload-benefits">
-                            <div>
-                                <span>☁️</span>
-                                <div>
-                                    <strong>Cloud Storage</strong>
-                                    <small>Your files are stored online.</small>
-                                </div>
-                            </div>
-
-                            <div>
-                                <span>🌍</span>
-                                <div>
-                                    <strong>Public Discovery</strong>
-                                    <small>Everyone can discover your content.</small>
-                                </div>
-                            </div>
-
-                            <div>
-                                <span>▶️</span>
-                                <div>
-                                    <strong>Instant Playback</strong>
-                                    <small>Play uploaded content directly.</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="upload-card">
-
-                        <div class="upload-card-header">
-                            <div>
-                                <span class="upload-icon">☁️</span>
-                                <h3>Upload Content</h3>
-                            </div>
-
-                            <span class="upload-status">
-                                <span></span> ONLINE
-                            </span>
-                        </div>
-
-                        <form id="uploadForm">
-
-                            <label class="input-label">
-                                Content title
-                            </label>
+                        <div class="form-group">
+                            <label for="uploaderName">Your Name</label>
 
                             <input
                                 type="text"
-                                id="uploadTitle"
-                                class="form-input"
-                                placeholder="Enter music or video title"
-                                maxlength="100"
-                                required
+                                id="uploaderName"
+                                placeholder="Trendora User"
                             >
+                        </div>
 
-                            <label class="input-label">
-                                Select file
-                            </label>
+                        <div class="form-group">
+                            <label for="contentType">Content Type</label>
 
-                            <label class="file-drop-zone" id="dropZone">
-
-                                <input
-                                    type="file"
-                                    id="uploadFile"
-                                    accept="audio/*,video/*"
-                                    required
-                                >
-
-                                <div class="drop-icon">📁</div>
-
-                                <strong id="fileText">
-                                    Click to choose a file
-                                </strong>
-
-                                <small>
-                                    Audio or video • Maximum 100 MB
-                                </small>
-
-                            </label>
-
-                            <div class="selected-file" id="selectedFile">
-                                <span>📄</span>
-                                <div>
-                                    <strong id="selectedFileName">
-                                        No file selected
-                                    </strong>
-                                    <small id="selectedFileSize"></small>
-                                </div>
-                            </div>
-
-                            <button
-                                type="submit"
-                                class="upload-button"
-                                id="uploadButton"
-                            >
-                                <span>☁️</span>
-                                Upload to Trendora
-                            </button>
-
-                            <div class="upload-progress" id="uploadProgress">
-                                <div class="progress-bar">
-                                    <span id="progressBar"></span>
-                                </div>
-                                <small id="progressText">Uploading...</small>
-                            </div>
-
-                            <p class="upload-note">
-                                By uploading, you confirm that you have
-                                permission to share this content.
-                            </p>
-
-                        </form>
+                            <select id="contentType">
+                                <option value="music">Music</option>
+                                <option value="movie">Video</option>
+                            </select>
+                        </div>
 
                     </div>
 
-                </div>
+                    <div class="file-drop-area" id="dropArea">
+
+                        <input
+                            type="file"
+                            id="fileInput"
+                            accept="audio/*,video/*"
+                            required
+                        >
+
+                        <div class="file-icon">📁</div>
+
+                        <h3>Choose a file</h3>
+
+                        <p>
+                            Tap here or drag and drop your file
+                        </p>
+
+                        <small>
+                            Supported audio and video files
+                        </small>
+
+                        <div id="selectedFile" class="selected-file"></div>
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="primary-button upload-button"
+                        id="uploadButton"
+                    >
+                        <span id="uploadButtonText">Upload Publicly ↑</span>
+                    </button>
+
+                    <div class="progress-container hidden" id="progressContainer">
+                        <div class="progress-bar">
+                            <div id="progressBar"></div>
+                        </div>
+                        <p id="progressText">Uploading...</p>
+                    </div>
+
+                    <p class="upload-note">
+                        By uploading, you confirm that you have permission
+                        to share the content.
+                    </p>
+
+                </form>
 
             </div>
+
         </section>
 
-        <!-- STATISTICS -->
-        <section class="stats-section">
-            <div class="container">
+        <!-- About -->
+        <section class="section about-section" id="about">
 
-                <div class="stats-heading">
-                    <span class="section-label">TRENDORA NUMBERS</span>
-                    <h2>Growing <span class="gradient-text">Together</span></h2>
-                </div>
+            <div class="about-content">
 
-                <div class="stats-grid">
+                <span class="section-label">ABOUT TRENDORA</span>
 
-                    <div class="stat-card">
-                        <span class="stat-icon">🎵</span>
-                        <strong id="musicCount">0</strong>
-                        <span>Music uploads</span>
-                    </div>
+                <h2>
+                    One Place.
+                    <span>Every Trend.</span>
+                </h2>
 
-                    <div class="stat-card">
-                        <span class="stat-icon">🎬</span>
-                        <strong id="videoCount">0</strong>
-                        <span>Video uploads</span>
-                    </div>
-
-                    <div class="stat-card">
-                        <span class="stat-icon">👥</span>
-                        <strong id="visitorCount">0</strong>
-                        <span>Local visits</span>
-                    </div>
-
-                    <div class="stat-card">
-                        <span class="stat-icon">⚡</span>
-                        <strong id="liveCount">0</strong>
-                        <span>Demo live viewers</span>
-                    </div>
-
-                </div>
-
-                <p class="stats-note">
-                    Upload counts come from Supabase. Visitor and live-viewer
-                    numbers are demo counters.
+                <p>
+                    Trendora is an entertainment platform where people
+                    can discover music, videos and trending content.
+                    Anyone can upload and share content with the community.
                 </p>
 
+                <div class="about-points">
+                    <div>
+                        <span>01</span>
+                        <strong>Discover</strong>
+                        <p>Explore new entertainment.</p>
+                    </div>
+
+                    <div>
+                        <span>02</span>
+                        <strong>Listen & Watch</strong>
+                        <p>Enjoy content directly in your browser.</p>
+                    </div>
+
+                    <div>
+                        <span>03</span>
+                        <strong>Share</strong>
+                        <p>Upload content for everyone.</p>
+                    </div>
+                </div>
+
             </div>
-        </section>
 
-        <!-- ABOUT -->
-        <section class="section about-section" id="about">
-            <div class="container about-content">
-
-                <div class="about-logo">
+            <div class="about-visual">
+                <div class="about-circle">
                     <img src="logo.png" alt="Trendora">
                 </div>
-
-                <div>
-                    <span class="section-label">ABOUT TRENDORA</span>
-                    <h2>One place for your <span class="gradient-text">trends.</span></h2>
-                    <p>
-                        Trendora is a community entertainment platform where
-                        people can discover, listen, watch and share content.
-                    </p>
-                </div>
-
             </div>
+
         </section>
 
     </main>
 
-    <!-- FOOTER -->
-    <footer class="footer">
-        <div class="container footer-content">
+    <!-- Footer -->
+    <footer>
+
+        <div class="footer-main">
 
             <div class="footer-brand">
                 <img src="logo.png" alt="Trendora">
 
                 <div>
                     <strong>TRENDORA</strong>
-                    <small>YOUR TREND UNIVERSE</small>
+                    <span>YOUR TREND UNIVERSE</span>
                 </div>
             </div>
 
-            <p>Discover. Create. Share. ✨</p>
+            <p>
+                Discover music, movies and entertainment.
+            </p>
 
             <div class="footer-links">
                 <a href="#home">Home</a>
                 <a href="#music">Music</a>
-                <a href="#videos">Videos</a>
+                <a href="#movies">Movies</a>
                 <a href="#upload">Upload</a>
             </div>
 
         </div>
 
         <div class="footer-bottom">
-            © <span id="year"></span> Trendora. Made with creativity.
+            <span>© <span id="currentYear"></span> Trendora</span>
+            <span>Made with ❤️ for entertainment</span>
         </div>
+
     </footer>
 
-    <!-- TOAST -->
-    <div class="toast" id="toast"></div>
-
-    <!-- BACK TO TOP -->
-    <button class="back-to-top" id="backToTop">↑</button>
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
 
     <script src="script.js"></script>
 
 </body>
-                                                    </html>
+    </html>
